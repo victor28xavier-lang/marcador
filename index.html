@@ -157,7 +157,7 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 .adh{font:700 17px Literata,serif;margin:20px 0 8px}
 .adl{list-style:none;margin:0;padding:0}.adl li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.adl li b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .adl .av{width:36px;height:36px;font-size:15px}
-.admtag{display:inline-block;margin-left:6px;font-size:11px;font-weight:800;color:#fff;background:var(--amber);border-radius:6px;padding:1px 6px;vertical-align:2px}
+.admtag{display:inline-block;margin-left:8px;font-size:11px;line-height:18px;font-weight:800;color:#fff;background:var(--amber);border-radius:6px;padding:0 7px;vertical-align:2px}
 .cbar small{font-weight:600;opacity:.8}
 .cropv{position:relative;width:min(280px,72vw);aspect-ratio:1;margin:0 auto;overflow:hidden;border-radius:18px;background:#000;touch-action:none;cursor:grab}
 .cropv img{position:absolute;max-width:none;user-select:none;-webkit-user-select:none;pointer-events:none}
@@ -902,7 +902,7 @@ async function renderFriends(){
   const mine=cleanCheers(st.cheers);
   html+=`<h2 class="ctl">Leitores</h2><div class="fr">`+rows.map(r=>{const mx=Math.max(r.goal,...r.mins);const p=r.book?Math.round(Math.min(1,Math.max(0,+r.book.p||0))*100):0;
     const sent=mine[r.f.id];
-    return `<div class="fc${r.f.me?' me':''}${r.live?' lv':''}"><div class="fh"${r.f.me?'':` data-shelf="${esc(r.f.id)}" data-name="${esc(r.name)}" role="button" tabindex="0"`}><div class="avw">${avHtml(r)}${r.live?'<i class="dot"></i>':''}</div><div style="flex:1"><b>${esc(r.name)}</b>${clubMeta[st.active]&&clubMeta[st.active].owner===r.f.id?'<span class="admtag">admin</span>':''}<span class="meta" style="margin:0">${r.live?'<span class="lvt">lendo agora</span>':r.f.me?'você':esc(ago(r.f.updated))}</span></div>${r.f.me?'':'<span class="shl">Estante ›</span>'}</div>`+
+    return `<div class="fc${r.f.me?' me':''}${r.live?' lv':''}"><div class="fh"${r.f.me?'':` data-shelf="${esc(r.f.id)}" data-name="${esc(r.name)}" role="button" tabindex="0"`}><div class="avw">${avHtml(r)}${r.live?'<i class="dot"></i>':''}</div><div style="flex:1"><b>${esc(r.name)}${clubMeta[st.active]&&clubMeta[st.active].owner===r.f.id?'<span class="admtag">admin</span>':''}</b><span class="meta" style="margin:0">${r.live?'<span class="lvt">lendo agora</span>':r.f.me?'você':esc(ago(r.f.updated))}</span></div>${r.f.me?'':'<span class="shl">Estante ›</span>'}</div>`+
     (r.f.me&&recv.length?`<div class="recv">${recv.slice(0,4).map(x=>`<span>${CHE[x.c.e]} ${esc(x.r.name)}</span>`).join('')}<small>${recv.length>1?'torceram':'torceu'} por você</small></div>`:'')+
     (r.book?`<div class="fbk">${coverHtml({title:String(r.book.t||''),author:String(r.book.a||''),pct:0,cover:typeof r.book.cv==='string'&&r.book.cv.length<20000?r.book.cv:''})}<div><p class="fb">${esc(r.book.t||'Sem título')}</p><div class="meta">${esc(r.book.a||'')}</div><div class="bar"><i style="width:${p}%"></i></div></div></div>`:`<div class="meta">Nenhum livro ainda</div>`)+
     `<div class="fs"><span><b class="num">${r.today}</b> de ${r.goal} min hoje</span><span><b>${r.streak}</b> ${r.streak===1?'dia seguido':'dias seguidos'}</span><span><b class="num">${r.week}</b> min na semana</span>${r.book?`<span><b>${p}%</b> lido</span>`:''}</div>`+
