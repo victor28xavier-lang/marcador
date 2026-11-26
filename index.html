@@ -215,11 +215,11 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 #reader{position:fixed;inset:0;z-index:5;--rbg:#fff;--rink:#1b1b1b;--rsoft:#8b8b8b;--rpanel:#f4f4f5;--rline:#e0e0e0;--rui:#dcdcdf;background:var(--rbg);color:var(--rink);overflow:hidden;transition:background .2s}
 #reader[data-rt=sepia]{--rbg:#f5ecd9;--rink:#4b3a28;--rsoft:#9a8467;--rpanel:#ede1c7;--rline:#dacdb0;--rui:#d8c9a8}
 #reader[data-rt=black]{--rbg:#000;--rink:#cdcdcd;--rsoft:#767676;--rpanel:#1c1c1e;--rline:#2b2b2b;--rui:#2a2a2d}
-#pw{position:absolute;inset:0;background:var(--rbg);transform-origin:50% 42%;transition:transform .26s cubic-bezier(.2,.7,.2,1),box-shadow .26s}
+#pw{position:absolute;inset:0;background:var(--rbg);transform-origin:50% 50%;transition:transform .26s cubic-bezier(.2,.7,.2,1),box-shadow .26s}
 #reader.ui{background:var(--rui)}
-#reader.ui #pw{transform:scale(.56);box-shadow:0 0 0 5px #2d9be6}
+#reader.ui #pw{transform:var(--cardT,scale(.62));box-shadow:0 0 0 5px #2d9be6}
 #reader.ui .rf{opacity:0}
-.pctx::before{content:'·';margin-right:12px}
+
 #pg{position:absolute;overflow:hidden;top:calc(env(safe-area-inset-top) + 26px);bottom:calc(env(safe-area-inset-bottom) + 40px);left:26px;right:26px}
 .bmk{position:absolute;top:0;right:22px;width:22px;height:34px;background:#2d9be6;clip-path:polygon(0 0,100% 0,100% 100%,50% 76%,0 100%);display:none}
 .bmk.on{display:block}
@@ -235,7 +235,7 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 #txt table{border-collapse:collapse;max-width:100%;display:block;overflow:hidden;font-size:.9em}
 #txt blockquote{margin:.6em 1em}
 .rh-unused{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top) + 14px) 64px 0;text-align:center;font:600 12px/1.2 Manrope,sans-serif;color:var(--rsoft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rf{position:absolute;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom) + 40px);display:flex;justify-content:flex-start;transition:opacity .2s;align-items:center;gap:12px;padding:0 22px env(safe-area-inset-bottom);font:500 12px/1.2 Manrope,sans-serif;color:var(--rsoft)}
+.rf{position:absolute;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom) + 40px);display:flex;justify-content:space-between;transition:opacity .2s;align-items:center;gap:12px;padding:0 22px env(safe-area-inset-bottom);font:500 12px/1.2 Manrope,sans-serif;color:var(--rsoft)}
 .rf button{background:none;border:0;color:inherit;font:inherit;padding:0;cursor:pointer;min-height:24px}
 .ch{position:absolute;left:0;right:0;z-index:3;background:var(--rpanel);color:var(--rink);font-family:Manrope,sans-serif;transition:transform .22s ease,opacity .22s}
 .ch.top{top:0;padding:calc(env(safe-area-inset-top) + 14px) 8px 14px;border-bottom:1px solid var(--rline)}
@@ -244,7 +244,7 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 .ib.aa{font:400 24px Manrope,sans-serif}
 .ib.on svg{fill:#2d9be6;stroke:#2d9be6}
 .btl{text-align:center;font:500 18px/1.25 Literata,serif;margin-top:6px;padding:0 16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ch.bot{bottom:0;border-top:1px solid var(--rline);padding:14px 22px calc(env(safe-area-inset-bottom) + 64px)}
+.ch.bot{bottom:0;border-top:1px solid var(--rline);padding:14px 22px calc(env(safe-area-inset-bottom) + 14px)}
 .pinfo{text-align:center;font-size:15px;color:var(--rsoft);margin-bottom:8px}
 .slr{display:flex;align-items:center;gap:12px}
 .vb{flex:none;background:var(--rline);border:0;color:var(--rink);border-radius:10px;min-height:40px;padding:0 12px;font:700 13px Manrope,sans-serif;cursor:pointer}
@@ -506,6 +506,10 @@ function prog(){
   clearTimeout(saveT);saveT=setTimeout(save,400);
 }
 
+/* encaixa o cartão da página entre os menus */
+function fitCard(){const H=R.clientHeight,t=$('.ch.top').offsetHeight,b=$('.ch.bot').offsetHeight,g=14;
+  const sc=Math.max(.4,Math.min(.9,(H-t-b-2*g)/H)),ty=(t+g)-H/2+H*sc/2;
+  R.style.setProperty('--cardT',`translateY(${ty.toFixed(1)}px) scale(${sc.toFixed(3)})`)}
 /* toques e gestos */
 function tap(el,fn){if(!el)return;let sx=0,sy=0;
   el.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});
@@ -545,7 +549,7 @@ R.addEventListener('click',e=>{
   const sel=window.getSelection&&String(getSelection());if(sel&&sel.trim())return;
   if(R.classList.contains('ui')||sheetOpen()){hideAll();return}
   const x=(e.clientX-R.getBoundingClientRect().left)/R.clientWidth;
-  if(x<.3)prev();else if(x>.7)next();else R.classList.add('ui');
+  if(x<.3)prev();else if(x>.7)next();else{fitCard();R.classList.add('ui')}
 });
 const slTarget=v=>{const bp=bk(),t=Math.min(B.total-1,(v-1)*bp.cpp);let i=0;while(i<B.spine.length-1&&before(i+1)<=t)i++;return {i,f:Math.min(1,Math.max(0,(t-before(i))/B.lens[i]))}};
 $('#sl').addEventListener('input',e=>{dragging=true;const v=+e.target.value,x=slTarget(v);$('#pinfo').textContent=`Página ${v} de ${e.target.max}`;$('#slc').textContent=chName(x.i)});
@@ -563,7 +567,7 @@ function fillToc(){
 document.querySelectorAll('#aa .seg[data-k] button').forEach(b=>tap(b,()=>{const k=b.parentElement.dataset.k;st.rd[k]=b.dataset.v;save();applyRd();layout()}));
 const setFont=v=>{st.font=Math.max(14,Math.min(30,v));save();applyRd();layout()};
 tap($('#fm'),()=>setFont(st.font-1));tap($('#fp'),()=>setFont(st.font+1));
-let rzT;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(B)layout()},150)});
+let rzT;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(B){layout();fitCard()}},150)});
 if(document.fonts)document.fonts.ready.then(()=>{if(B)layout()});
 async function openBook(id,parsed){
   $('#load').hidden=false;
