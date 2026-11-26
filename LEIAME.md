@@ -19,21 +19,38 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
     match /clubs/{club} {
-      allow read: if request.auth != null;
-      allow create, update: if request.auth != null
-        && request.resource.data.keys().hasOnly(['name','by','at'])
-        && request.resource.data.name is string && request.resource.data.name.size() <= 60;
+      function cpath() { return /databases/$(database)/documents/clubs/$(club); }
+      function cdata() { return exists(cpath()) ? get(cpath()).data : {}; }
+      function signed() { return request.auth != null; }
+      function owner() { return cdata().get('owner', ''); }
+      function isOwner() { return signed() && owner() == request.auth.uid; }
+      function banned() { return signed() && request.auth.uid in cdata().get('banned', []); }
+      function member() { return signed() && !banned() && (!cdata().get('closed', false) || isOwner() || request.auth.uid in cdata().get('members', [])); }
+      function clubKeys() { return request.resource.data.keys().hasOnly(['name','owner','at','closed','members','banned','bnames','by']); }
+
+      allow read: if signed();
+      allow create: if signed() && clubKeys() && request.resource.data.owner == request.auth.uid;
+      allow update: if signed() && clubKeys() && (
+        resource.data.get('owner', '') == request.auth.uid ||
+        (resource.data.get('owner', '') == '' && request.resource.data.owner == request.auth.uid));
+
       match /readers/{uid} {
-        allow read: if request.auth != null;
-        allow create, update: if request.auth != null && request.auth.uid == uid
+        allow read: if member();
+        allow create, update: if member() && request.auth.uid == uid
           && request.resource.data.keys().hasOnly(['books','days','goal','per','nick','updated','live','cheers','ev','photo']);
-        allow delete: if request.auth != null && request.auth.uid == uid;
+        allow delete: if signed() && (request.auth.uid == uid || isOwner());
       }
       match /shelves/{uid} {
-        allow read: if request.auth != null;
-        allow create, update: if request.auth != null && request.auth.uid == uid
+        allow read: if member();
+        allow create, update: if member() && request.auth.uid == uid
           && request.resource.data.keys().hasOnly(['books','updated']);
-        allow delete: if request.auth != null && request.auth.uid == uid;
+        allow delete: if signed() && (request.auth.uid == uid || isOwner());
+      }
+      match /requests/{uid} {
+        allow read: if signed() && (request.auth.uid == uid || isOwner());
+        allow create, update: if signed() && request.auth.uid == uid && !banned()
+          && request.resource.data.keys().hasOnly(['nick','photo','at']);
+        allow delete: if signed() && (request.auth.uid == uid || isOwner());
       }
     }
   }

@@ -1,5 +1,5 @@
 // Guarda o app no aparelho para abrir sem internet.
-const CACHE = 'marcador-v27';
+const CACHE = 'marcador-v28';
 const SHELL = ['./', 'index.html', 'config.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 const CDN = ['cdnjs.cloudflare.com', 'www.gstatic.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 

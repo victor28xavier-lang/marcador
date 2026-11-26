@@ -107,7 +107,8 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 .shelfrow::-webkit-scrollbar{display:none}
 .shelfrow{scroll-padding-inline:max(5vw,18px)}
 .shelfrow::after{content:'';flex:none;width:1px}
-.shelfrow>.tile{flex:none;width:132px;scroll-snap-align:start}
+.shelfrow>.tile,.shelfrow>.rtile{flex:none;width:132px;scroll-snap-align:start}
+.upd{margin-top:8px;width:100%;min-height:36px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--acc);font:700 13px Manrope,sans-serif;cursor:pointer}
 .stat3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .stat3 div{font-size:13px;color:var(--soft)}
 .stat3 b{display:block;font:800 24px/1.2 Manrope,sans-serif;color:var(--ink)}
@@ -125,7 +126,7 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 .empty{background:var(--card);border-radius:22px;padding:24px}
 .btn.ghost{background:var(--card);color:var(--ink)}
 .dlgw{position:fixed;inset:0;z-index:7;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
-.dlg{width:100%;max-width:520px;background:var(--bg);border-radius:24px 24px 0 0;padding:22px 20px calc(env(safe-area-inset-bottom) + 22px);box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+.dlg{max-height:92vh;overflow:auto;width:100%;max-width:520px;background:var(--bg);border-radius:24px 24px 0 0;padding:22px 20px calc(env(safe-area-inset-bottom) + 22px);box-shadow:0 -10px 40px rgba(0,0,0,.25)}
 @media(min-width:700px){.dlgw{align-items:center}.dlg{border-radius:24px}}
 .dhead{display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;align-items:center;margin-bottom:18px}
 .dhead .cv .rib,.dhead .cv .pc,.dhead .cv .chk{display:none}
@@ -133,6 +134,9 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 .dhead p{margin:4px 0 0}
 .dlg .fl{max-width:none}
 .flb{font-weight:600;margin:0 0 6px}
+.progrow{display:flex;align-items:center;gap:12px}.progrow input{flex:1;accent-color:var(--acc);height:32px}.progrow output{min-width:48px;text-align:right;font-weight:800}
+.pgin{display:flex;align-items:center;gap:8px;margin-top:6px;color:var(--soft);font-size:14px}.pgin input,.addm input{width:84px;min-height:42px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:600 16px Manrope,sans-serif;padding:0 10px}
+.addm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;color:var(--soft);font-size:14px}.addm button{min-height:42px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-weight:800;cursor:pointer}
 .seg2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:16px}
 .seg2 button{display:flex;align-items:center;justify-content:center;gap:6px;min-height:46px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;padding:0 6px}
 .seg2 i{width:10px;height:14px;flex:none;clip-path:polygon(0 0,100% 0,100% 100%,50% 75%,0 100%)}
@@ -148,6 +152,13 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 #mini b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #mini span{font-size:13px;color:var(--soft)}
 #mini .mp{height:3px;border-radius:3px;background:var(--line);margin-top:6px;overflow:hidden}#mini .mp i{display:block;height:100%;background:var(--acc)}
+.sw{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:16px;padding:14px;cursor:pointer;margin-bottom:8px}
+.sw input{width:22px;height:22px;accent-color:var(--green);flex:none;margin-top:2px}.sw span{display:grid;gap:2px}.sw small{color:var(--soft);font-size:13px}
+.adh{font:700 17px Literata,serif;margin:20px 0 8px}
+.adl{list-style:none;margin:0;padding:0}.adl li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.adl li b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adl .av{width:36px;height:36px;font-size:15px}
+.admtag{display:inline-block;margin-left:6px;font-size:11px;font-weight:800;color:#fff;background:var(--amber);border-radius:6px;padding:1px 6px;vertical-align:2px}
+.cbar small{font-weight:600;opacity:.8}
 .cropv{position:relative;width:min(280px,72vw);aspect-ratio:1;margin:0 auto;overflow:hidden;border-radius:18px;background:#000;touch-action:none;cursor:grab}
 .cropv img{position:absolute;max-width:none;user-select:none;-webkit-user-select:none;pointer-events:none}
 .cropmask{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 999px rgba(0,0,0,.55);pointer-events:none;outline:2px solid rgba(255,255,255,.8);outline-offset:-2px}
@@ -392,6 +403,10 @@ body[data-tab=notif]{--acc:var(--coral)}
     <label class="fl" style="flex:1;margin:0">Seu nome<input id="pfname" maxlength="40" autocomplete="nickname"></label></div>
   <div id="pfacc"></div>
 </div></div>
+<div class="dlgw" id="admdlg" hidden><div class="dlg shd">
+  <div class="ph" style="margin:0 0 12px"><h2>Administrar clube</h2><button class="icb" id="admclose" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div id="admbody"></div>
+</div></div>
 <div class="dlgw" id="cropdlg" hidden><div class="dlg">
   <h2 style="margin:0 0 4px">Ajustar foto</h2><p class="meta" style="margin:0 0 14px">Arraste para posicionar e use a barra (ou dois dedos) para aproximar.</p>
   <div class="cropv" id="cropv"><img id="cropimg" alt="" draggable="false"><i class="cropmask"></i></div>
@@ -405,6 +420,12 @@ body[data-tab=notif]{--acc:var(--coral)}
     <label class="fl">Nome do livro<input id="bt" maxlength="200" required enterkeyhint="next"></label>
     <label class="fl">Autor<input id="ba" maxlength="120" enterkeyhint="done"></label>
     <div class="rf2"><div><p class="flb">Sua nota</p><div class="rate" id="drate"><button type="button" data-r="1" aria-label="1 estrela">★</button><button type="button" data-r="2" aria-label="2 estrelas">★</button><button type="button" data-r="3" aria-label="3 estrelas">★</button><button type="button" data-r="4" aria-label="4 estrelas">★</button><button type="button" data-r="5" aria-label="5 estrelas">★</button></div></div><button type="button" class="favb" id="dfav" aria-pressed="false" aria-label="Favoritar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.5 1.2 4.4 2.5.9-1.3 2.3-2.5 4.4-2.5 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg><span>Favorito</span></button></div>
+    <div id="dprog"><p class="flb">Onde você está</p>
+      <div class="progrow"><input type="range" id="dpct" min="0" max="100" step="1" aria-label="Porcentagem lida"><output id="dpcto">0%</output></div>
+      <div class="pgin"><span>ou página</span><input id="dpg" type="number" inputmode="numeric" min="0" aria-label="Página atual"><span>de</span><input id="dpgt" type="number" inputmode="numeric" min="1" aria-label="Total de páginas"></div>
+      <p class="flb" style="margin-top:14px">Leu fora do app? Some os minutos</p>
+      <div class="addm"><button type="button" data-m="10">+10</button><button type="button" data-m="20">+20</button><button type="button" data-m="30">+30</button><input id="dmin" type="number" inputmode="numeric" min="0" max="600" placeholder="0" aria-label="Minutos lidos fora do app"><span>min hoje</span></div>
+    </div>
     <div id="dstw"><p class="flb">Status</p><div class="seg2" id="dst"><button type="button" data-s="new"><i style="background:var(--amber)"></i>Não iniciado</button><button type="button" data-s="reading"><i style="background:var(--blue)"></i>Lendo</button><button type="button" data-s="done"><i style="background:var(--green)"></i>Lido</button></div></div>
     <div class="dact"><button type="button" class="btn ghost" id="dcancel">Cancelar</button><button type="submit" class="btn" id="dok">Adicionar</button></div>
     <button type="button" class="dlink" id="ddel" hidden>Remover livro da estante</button>
@@ -634,7 +655,9 @@ async function openBook(id,parsed){
     if(st.books[id]&&st.books[id].st==='new')delete st.books[id].st;
     if(st.books[id]&&!st.books[id].startEv&&!(st.books[id].pct>0.01)){st.books[id].startEv=1;addEv('start',st.books[id].title)}
     st.liveAt=Date.now();schedule();
-    const m=st.books[id]||{};await render(Math.min(m.ch||0,B.spine.length-1),m.f||0);lastAct=Date.now();
+    const m=st.books[id]||{};
+    if(m.jumpPct!=null){const t=Math.min(B.total-1,Math.max(0,+m.jumpPct)*B.total);let i=0;while(i<B.spine.length-1&&before(i+1)<=t)i++;m.ch=i;m.f=Math.min(1,Math.max(0,(t-before(i))/B.lens[i]));delete m.jumpPct;save()}
+    await render(Math.min(m.ch||0,B.spine.length-1),m.f||0);lastAct=Date.now();
   }catch(e){toast(e.message==='lib'?'Não consegui carregar o leitor. Verifique a internet e recarregue.':'Não consegui abrir esse EPUB.')}
   finally{$('#load').hidden=true}
 }
@@ -730,7 +753,7 @@ function home(){
   $('#streak').textContent=s;$('#streakl').textContent=s===1?'dia seguido':'dias seguidos';
   const ids=sorted();
   const reading=nowReading();
-  $('#reading').innerHTML=ids.length?`<div class="shelfrow">${(reading.length?reading:ids).map(id=>tileHtml(id)).join('')}</div>`
+  $('#reading').innerHTML=ids.length?`<div class="shelfrow">${(reading.length?reading:ids).map(id=>`<div class="rtile">${tileHtml(id)}<button class="upd" data-edit="${esc(id)}">Atualizar leitura</button></div>`).join('')}</div>`
     :`<div class="empty"><h2>Estante novinha em folha</h2><p>Coloque aqui o EPUB que você está lendo. O Marcador guarda onde você parou e conta cada minuto pra sua meta.</p><label class="btn" for="file" role="button" tabindex="0">Adicionar EPUB</label></div>`;
   $('#nb').textContent=ids.length;$('#nd').textContent=ids.filter(id=>statusOf(st.books[id])==='done').length;
   $('#nm').textContent=Math.round(Object.values(st.days).reduce((a,b)=>a+(+b||0),0)/60).toLocaleString('pt-BR');
@@ -746,7 +769,12 @@ document.addEventListener('click',async e=>{
   const x=e.target.closest('[data-edit]');if(x)editBook(x.dataset.edit);
 });
 /* janela de nome e autor */
-let dlgDone=null,dlgBase={},dlgSt=null,dlgRate=0,dlgFav=false;
+let dlgDone=null,dlgBase={},dlgSt=null,dlgRate=0,dlgFav=false,dlgP0=0;
+const setPct=v=>{v=Math.max(0,Math.min(100,Math.round(v)));$('#dpct').value=v;$('#dpcto').textContent=v+'%'};
+$('#dpct').addEventListener('input',e=>{setPct(+e.target.value);const t=+$('#dpgt').value;if(t>0)$('#dpg').value=Math.round(e.target.value/100*t)});
+const fromPages=()=>{const p=+$('#dpg').value,t=+$('#dpgt').value;if(t>0&&p>=0)setPct(p/t*100)};
+$('#dpg').addEventListener('input',fromPages);$('#dpgt').addEventListener('input',fromPages);
+document.querySelectorAll('.addm [data-m]').forEach(b=>b.onclick=()=>{$('#dmin').value=Math.min(600,(+$('#dmin').value||0)+ +b.dataset.m)});
 const markRate=()=>{document.querySelectorAll('#drate button').forEach(b=>b.classList.toggle('on',+b.dataset.r<=dlgRate));$('#dfav').classList.toggle('on',dlgFav);$('#dfav').setAttribute('aria-pressed',dlgFav)};
 document.querySelectorAll('#drate button').forEach(b=>b.onclick=()=>{const v=+b.dataset.r;dlgRate=dlgRate===v?0:v;markRate()});
 $('#dfav').onclick=()=>{dlgFav=!dlgFav;markRate()};
@@ -755,26 +783,34 @@ document.querySelectorAll('#dst button').forEach(b=>b.onclick=()=>{dlgSt=b.datas
 function bookDialog(base,mode){
   dlgBase=base;$('#bt').value=base.title||'';$('#ba').value=base.author||'';
   $('#dtitle').textContent=mode==='add'?'Adicionar livro':'Editar livro';
-  $('#dsub').textContent=mode==='add'?(base.title?'Já preenchi com o que veio no arquivo. Ajuste se quiser.':'Esse arquivo não trouxe o nome. Preencha abaixo.'):'Mude o nome, o autor, a nota ou o status do livro.';
+  $('#dsub').textContent=mode==='add'?(base.title?'Já preenchi com o que veio no arquivo. Ajuste se quiser.':'Esse arquivo não trouxe o nome. Preencha abaixo.'):'Atualize onde você está, a nota, o status ou os dados do livro.';
   $('#dok').textContent=mode==='add'?'Adicionar':'Salvar';
   const del=$('#ddel');del.hidden=mode==='add';del.removeAttribute('data-arm');del.textContent='Remover livro da estante';
   $('#dstw').hidden=mode==='add';dlgSt=mode==='add'?null:statusOf(base);markSt();
   dlgRate=Math.max(0,Math.min(5,+base.rate||0));dlgFav=!!base.fav;markRate();
+  $('#dprog').hidden=mode==='add';const p0=Math.round((+base.pct||0)*100);$('#dpct').value=p0;$('#dpcto').textContent=p0+'%';$('#dpgt').value=base.ptot||'';$('#dpg').value=base.ptot?Math.round((+base.pct||0)*base.ptot):'';$('#dmin').value='';dlgP0=p0;
   dcv();$('#dlg').hidden=false;
   return new Promise(res=>{dlgDone=res});
 }
 const dcv=()=>{$('#dcv').innerHTML=coverHtml({...dlgBase,title:$('#bt').value||'Sem título',author:$('#ba').value,pct:0,st:undefined})};
 $('#bt').addEventListener('input',dcv);$('#ba').addEventListener('input',dcv);
 function closeDlg(v){$('#dlg').hidden=true;const f=dlgDone;dlgDone=null;if(f)f(v)}
-$('#bookf').addEventListener('submit',e=>{e.preventDefault();const t=$('#bt').value.trim();if(!t){$('#bt').focus();return}closeDlg({title:t.slice(0,200),author:$('#ba').value.trim().slice(0,120),st:dlgSt,rate:dlgRate,fav:dlgFav})});
+$('#bookf').addEventListener('submit',e=>{e.preventDefault();const t=$('#bt').value.trim();if(!t){$('#bt').focus();return}closeDlg({title:t.slice(0,200),author:$('#ba').value.trim().slice(0,120),st:dlgSt,rate:dlgRate,fav:dlgFav,pct:+$('#dpct').value,ptot:Math.max(0,Math.min(20000,+$('#dpgt').value||0)),min:Math.max(0,Math.min(600,Math.round(+$('#dmin').value||0)))})});
 $('#dcancel').onclick=()=>closeDlg(null);
 $('#dlg').addEventListener('click',e=>{if(e.target.id==='dlg')closeDlg(null)});
 $('#ddel').onclick=()=>{const d=$('#ddel');if(!d.hasAttribute('data-arm')){d.setAttribute('data-arm','');d.textContent='Toque de novo para remover';return}closeDlg('delete')};
+function addMinutes(min){
+  const k=dk(),hr=new Date().getHours(),pi=hr<6?3:hr<12?0:hr<18?1:2,b=st.days[k]||0,a=b+min*60;st.days[k]=a;
+  if(!st.per||typeof st.per!=='object')st.per={};(st.per[k]=st.per[k]||[0,0,0,0])[pi]+=min*60;
+  save();if(b<st.goal*60&&a>=st.goal*60)celebrate();else toast(min+' min somados à leitura de hoje');
+}
 async function editBook(id,sub){
   const m=st.books[id];if(!m)return;
   const pr=bookDialog(m,'edit');if(sub)$('#dsub').textContent=sub;const v=await pr;
   if(v==='delete'){delete st.books[id];delete mem[id];if(st.current===id)st.current=null;save();try{await delF(id)}catch(err){}home();toast('Livro removido');return}
-  if(v){m.title=v.title;m.author=v.author;m.rate=v.rate;m.fav=v.fav;
+  if(v){m.title=v.title;m.author=v.author;m.rate=v.rate;m.fav=v.fav;if(v.ptot)m.ptot=v.ptot;
+    if(v.pct!==dlgP0){m.pct=v.pct/100;m.jumpPct=v.pct/100;m.readAt=Date.now();delete m.st;if(v.pct>=100&&!m.doneEv){m.doneEv=1;addEv('done',m.title)}else if(v.pct>0&&!m.startEv){m.startEv=1;addEv('start',m.title)}}
+    if(v.min){addMinutes(v.min);m.readAt=Date.now()}
     if(v.st&&v.st!==statusOf(m)){m.st=v.st;if(v.st==='done'&&!m.doneEv){m.doneEv=1;addEv('done',m.title)}if(v.st==='done')m.pct=Math.max(m.pct||0,1);if(v.st==='new'){m.pct=0;m.ch=0;m.f=0}}
     save();home()}
 }
@@ -817,11 +853,12 @@ async function push(){
   const s=summary(),cl=st.clubs.join(','),key=JSON.stringify(s)+'|'+st.nick+'|'+cl;
   pushing=true;
   try{
-    if(key!==lastSent){const body={...s,nick:st.nick,updated:new Date().toISOString()};for(const c of st.clubs)await readersOf(c).doc(myId).set(body);lastSent=key}
+    const ok=st.clubs.filter(isMember);
+    if(key!==lastSent){const body={...s,nick:st.nick,updated:new Date().toISOString()};for(const c of ok){try{await readersOf(c).doc(myId).set(body)}catch(e){if(!e||e.code!=='permission-denied')throw e}}lastSent=key}
     const sh=shelfData(),sk=JSON.stringify(sh)+'|'+cl;
-    if(sk!==shelfSent){for(const c of st.clubs)await FS.collection('clubs').doc(c).collection('shelves').doc(myId).set({books:sh,updated:new Date().toISOString()});shelfSent=sk}
+    if(sk!==shelfSent){for(const c of ok){try{await clubRef(c).collection('shelves').doc(myId).set({books:sh,updated:new Date().toISOString()})}catch(e){if(!e||e.code!=='permission-denied')throw e}}shelfSent=sk}
   }
-  catch(e){if(e&&e.code==='permission-denied'){canWrite=false;renderFriends()}else setTimeout(schedule,15000)}
+  catch(e){setTimeout(schedule,15000)}
   pushing=false;if(dirty){dirty=false;schedule()}
 }
 const streakOf=(days,goal)=>{let s=0;const d=new Date();const m=x=>+days[dk(x)]||0;if(m(d)<goal)d.setDate(d.getDate()-1);while(m(d)>=goal&&s<400){s++;d.setDate(d.getDate()-1)}return s};
@@ -865,7 +902,7 @@ async function renderFriends(){
   const mine=cleanCheers(st.cheers);
   html+=`<h2 class="ctl">Leitores</h2><div class="fr">`+rows.map(r=>{const mx=Math.max(r.goal,...r.mins);const p=r.book?Math.round(Math.min(1,Math.max(0,+r.book.p||0))*100):0;
     const sent=mine[r.f.id];
-    return `<div class="fc${r.f.me?' me':''}${r.live?' lv':''}"><div class="fh"${r.f.me?'':` data-shelf="${esc(r.f.id)}" data-name="${esc(r.name)}" role="button" tabindex="0"`}><div class="avw">${avHtml(r)}${r.live?'<i class="dot"></i>':''}</div><div style="flex:1"><b>${esc(r.name)}</b><span class="meta" style="margin:0">${r.live?'<span class="lvt">lendo agora</span>':r.f.me?'você':esc(ago(r.f.updated))}</span></div>${r.f.me?'':'<span class="shl">Estante ›</span>'}</div>`+
+    return `<div class="fc${r.f.me?' me':''}${r.live?' lv':''}"><div class="fh"${r.f.me?'':` data-shelf="${esc(r.f.id)}" data-name="${esc(r.name)}" role="button" tabindex="0"`}><div class="avw">${avHtml(r)}${r.live?'<i class="dot"></i>':''}</div><div style="flex:1"><b>${esc(r.name)}</b>${clubMeta[st.active]&&clubMeta[st.active].owner===r.f.id?'<span class="admtag">admin</span>':''}<span class="meta" style="margin:0">${r.live?'<span class="lvt">lendo agora</span>':r.f.me?'você':esc(ago(r.f.updated))}</span></div>${r.f.me?'':'<span class="shl">Estante ›</span>'}</div>`+
     (r.f.me&&recv.length?`<div class="recv">${recv.slice(0,4).map(x=>`<span>${CHE[x.c.e]} ${esc(x.r.name)}</span>`).join('')}<small>${recv.length>1?'torceram':'torceu'} por você</small></div>`:'')+
     (r.book?`<div class="fbk">${coverHtml({title:String(r.book.t||''),author:String(r.book.a||''),pct:0,cover:typeof r.book.cv==='string'&&r.book.cv.length<20000?r.book.cv:''})}<div><p class="fb">${esc(r.book.t||'Sem título')}</p><div class="meta">${esc(r.book.a||'')}</div><div class="bar"><i style="width:${p}%"></i></div></div></div>`:`<div class="meta">Nenhum livro ainda</div>`)+
     `<div class="fs"><span><b class="num">${r.today}</b> de ${r.goal} min hoje</span><span><b>${r.streak}</b> ${r.streak===1?'dia seguido':'dias seguidos'}</span><span><b class="num">${r.week}</b> min na semana</span>${r.book?`<span><b>${p}%</b> lido</span>`:''}</div>`+
@@ -882,7 +919,7 @@ async function renderFriends(){
     const ic=e.t==='cheer'?CHE[e.c]:`<i class="fi ${e.t}"></i>`;
     return `<li><span class="fic">${ic}</span><span class="ftx">${txt}</span><small>${agoMs(e.at)}</small></li>`}).join('')}</ul>`:'<p class="meta">Quando alguém bater a meta, começar ou terminar um livro, aparece aqui.</p>');
   if(!canWrite)html+='<p class="note">Sua leitura não está sendo enviada: confira as regras do Firestore (veja o LEIAME).</p>';
-  html+=`<div class="row2"><span class="meta" style="margin:0"><b>${esc(clubName(st.active))}</b> · código <b>${esc(st.active)}</b> · você aparece como <b>${esc(st.nick)}</b></span><span class="hb"><button class="btn ghost sm" id="rename">Renomear</button><button class="btn ghost sm" id="leave">Sair deste clube</button></span></div>`;
+  html+=`<div class="row2"><span class="meta" style="margin:0"><b>${esc(clubName(st.active))}</b> · código <b>${esc(st.active)}</b> · você aparece como <b>${esc(st.nick)}</b></span><span class="hb">${isOwner(st.active)?`<button class="btn sm" id="admin">Administrar${(reqs[st.active]||[]).length?` (${reqs[st.active].length})`:''}</button>`:clubMeta[st.active]&&!clubMeta[st.active].owner?'<button class="btn ghost sm" id="admin">Administrar</button>':''}<button class="btn ghost sm" id="leave">Sair deste clube</button></span></div>`;
   $('#friends').innerHTML=clubBar()+html;
   /* aviso de torcida nova */
   if(recv.length&&recv[0].c.at>(st.seenCheer||0)){st.seenCheer=recv[0].c.at;save();if($('#reader').hidden)toast(`${CHE[recv[0].c.e]} ${recv[0].r.name} torceu por você!`)}
@@ -899,10 +936,21 @@ if(!st.clubs.includes(st.active))st.active=st.clubs[0]||null;
 let FS=null,authP=null,clubsLive={},clubNames={},unsubs={},shelfSent='',initDone={};
 const clubName=c=>String(clubNames[c]||c||'').slice(0,60);
 const readersOf=c=>FS.collection('clubs').doc(c).collection('readers');
-function setActive(c){st.active=c;save();COL=c&&FS?readersOf(c):null;friends=clubsLive[c]||[];loaded=!!clubsLive[c];if(loaded)renderFriends();else if(c)fnote('Carregando o clube…')}
+const clubRef=c=>FS.collection('clubs').doc(c);
+let clubMeta={},reqs={},rdUnsub={},rdOK={};
+const FV=()=>firebase.firestore.FieldValue;
+const isOwner=c=>!!(clubMeta[c]&&clubMeta[c].owner&&clubMeta[c].owner===myId);
+const isBanned=c=>!!(clubMeta[c]&&Array.isArray(clubMeta[c].banned)&&clubMeta[c].banned.includes(myId));
+const isMember=c=>{const m=clubMeta[c];if(!m)return true;if(isBanned(c))return false;return !m.closed||m.owner===myId||(Array.isArray(m.members)&&m.members.includes(myId))};
+function setActive(c){st.active=c;save();COL=c&&FS?readersOf(c):null;friends=clubsLive[c]||[];loaded=!!clubsLive[c];
+  if(c&&!isMember(c)){clubState(c);return}if(loaded)renderFriends();else if(c)fnote('Carregando o clube…')}
+function clubState(c){
+  const ban=isBanned(c);
+  $('#friends').innerHTML=clubBar()+`<div class="empty"><h2>${ban?'Você foi removido deste clube':'Pedido enviado'}</h2><p>${ban?'O administrador de <b>'+esc(clubName(c))+'</b> tirou você do clube.':'O clube <b>'+esc(clubName(c))+'</b> só aceita novos membros com aprovação. Assim que o administrador aceitar, você entra e aparece aqui.'}</p><button class="btn ghost" id="leave" type="button">${ban?'Tirar da minha lista':'Cancelar pedido'}</button></div>`;
+}
 function showJoin(first){
   const chips=st.clubs.length?clubBar():'';
-  $('#friends').innerHTML=chips+`<form class="empty" id="join"><h2>${first?'Entrar num clube':'Entrar ou criar outro clube'}</h2><p>Combine um código com seus amigos. Quem usar o mesmo código entra no mesmo clube. Se o código for novo, você cria o clube.</p>
+  $('#friends').innerHTML=chips+`<form class="empty" id="join"><h2>${first?'Entrar num clube':'Entrar ou criar outro clube'}</h2><p>Combine um código com seus amigos. Quem usar o mesmo código entra no mesmo clube. Se o código for novo, você cria o clube e vira o administrador.</p>
   <label class="fl">Seu apelido<input id="jn" maxlength="40" required autocomplete="nickname"></label>
   <label class="fl">Código do clube<input id="jc" maxlength="40" required placeholder="ex.: turma-ifrj" autocapitalize="off"></label>
   <label class="fl">Nome do clube <span class="meta">(opcional, para clube novo)</span><input id="jname" maxlength="60" placeholder="ex.: Leitores do IF"></label>
@@ -911,13 +959,20 @@ function showJoin(first){
   const jc=$('#jcancel');if(jc)jc.onclick=()=>setActive(st.active);
   $('#join').onsubmit=async e=>{e.preventDefault();const n=$('#jn').value.trim().slice(0,40),c=clean($('#jc').value),nm=$('#jname').value.trim().slice(0,60);
     if(!n||c.length<3){toast('Use um apelido e um código com pelo menos 3 letras ou números.');return}
-    if(!st.clubs.includes(c)){if(st.clubs.length>=8){toast('Dá para participar de até 8 clubes.');return}st.clubs.push(c)}
-    st.nick=n;st.active=c;save();await connectClubs();
-    if(FS){try{const ref=FS.collection('clubs').doc(c),d=await ref.get();if(nm&&!(d.exists&&d.data().name))await ref.set({name:nm,by:myId,at:Date.now()})}catch(err){}}
+    if(st.clubs.includes(c)){setActive(c);return}
+    if(st.clubs.length>=8){toast('Dá para participar de até 8 clubes.');return}
+    if(!(await ensureFB())){toast('Sem conexão agora. Tente de novo.');return}
+    st.nick=n;save();
+    try{const d=await clubRef(c).get();
+      if(!d.exists){await clubRef(c).set({name:nm,owner:myId,at:Date.now(),closed:false,members:[myId],banned:[]});toast('Clube criado! Você é o administrador.')}
+      else{const m=d.data()||{};if(Array.isArray(m.banned)&&m.banned.includes(myId)){toast('O administrador desse clube não deixa você entrar.');return}
+        if(m.closed&&m.owner!==myId&&!(Array.isArray(m.members)&&m.members.includes(myId))){await clubRef(c).collection('requests').doc(myId).set({nick:n,...(okImg(st.photoS)?{photo:st.photoS}:{}),at:Date.now()});toast('Pedido enviado ao administrador')}}
+    }catch(err){}
+    st.clubs.push(c);st.active=c;save();await connectClubs();
   };
 }
 function clubBar(){
-  return `<div class="chips cbar">${st.clubs.map(c=>`<button data-club="${esc(c)}" class="${c===st.active?'on':''}">${esc(clubName(c))}${c!==st.active&&unreadIn(c)?'<i class="cdot"></i>':''}</button>`).join('')}<button data-club="+" aria-label="Entrar ou criar clube">+ Clube</button></div>`;
+  return `<div class="chips cbar">${st.clubs.map(c=>`<button data-club="${esc(c)}" class="${c===st.active?'on':''}">${esc(clubName(c))}${clubMeta[c]&&!isMember(c)&&!isBanned(c)?' <small>(aguardando)</small>':''}${(c!==st.active&&unreadIn(c))||(isOwner(c)&&(reqs[c]||[]).length)?'<i class="cdot"></i>':''}</button>`).join('')}<button data-club="+" aria-label="Entrar ou criar clube">+ Clube</button></div>`;
 }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-club]');if(!b)return;if(b.dataset.club==='+'){showJoin(false);return}setActive(b.dataset.club)});
 async function ensureFB(){
@@ -926,17 +981,32 @@ async function ensureFB(){
   if(!authP)authP=(async()=>{if(!firebase.apps.length)firebase.initializeApp(CFG);const au=firebase.auth();if(!au.currentUser)await au.signInAnonymously();myId=au.currentUser.uid;FS=firebase.firestore()})();
   try{await authP;return true}catch(e){authP=null;return false}
 }
+function subReaders(c){
+  if(rdUnsub[c]){rdUnsub[c]();delete rdUnsub[c]}rdOK[c]=isMember(c);if(!rdOK[c])return;
+  const t=setTimeout(()=>{if(c===st.active&&!clubsLive[c])fnote('Ainda não deu para carregar as leituras dos amigos.')},10000);
+  rdUnsub[c]=readersOf(c).onSnapshot(s=>{clearTimeout(t);clubsLive[c]=s.docs.map(d=>({...d.data(),id:d.id}));trackJoins(c);
+      if(c===st.active){friends=clubsLive[c];loaded=true;renderFriends()}renderNotifs()},
+    e=>{clearTimeout(t);delete rdUnsub[c];if(c===st.active&&isMember(c))fnote(e&&e.code==='permission-denied'?'O Firestore recusou o acesso: confira as regras no LEIAME.':'Não foi possível carregar o clube agora.')});
+}
+function subRequests(c){
+  if(unsubs[c]&&unsubs[c].rq)return;if(!isOwner(c))return;
+  unsubs[c].rq=clubRef(c).collection('requests').onSnapshot(s=>{const prev=new Set((reqs[c]||[]).map(r=>r.id));reqs[c]=s.docs.map(d=>({...d.data(),id:d.id}));
+    for(const r of reqs[c])if(!prev.has(r.id)&&initDone['rq'+c]){st.nl=[{t:'req',who:String(r.nick||'Alguém').slice(0,40),c,at:Date.now()},...(st.nl||[])].slice(0,30);save()}
+    initDone['rq'+c]=1;renderNotifs();if(c===st.active&&loaded)renderFriends();if(!$('#admdlg').hidden&&admC===c)renderAdmin()},()=>{});
+}
 async function connectClubs(){
   if(!(await ensureFB())){fnote(CFG&&CFG.apiKey?'Não consegui conectar ao clube agora. Confira a internet; o leitor continua funcionando.':'O clube com amigos ainda não está configurado.');return}
   if(!st.clubs.length||!st.nick){showJoin(true);return}
-  for(const c of Object.keys(unsubs))if(!st.clubs.includes(c)){unsubs[c].forEach(f=>f());delete unsubs[c];delete clubsLive[c]}
+  for(const c of Object.keys(unsubs))if(!st.clubs.includes(c)){unsubs[c].forEach(f=>f());if(unsubs[c].rq)unsubs[c].rq();delete unsubs[c];if(rdUnsub[c]){rdUnsub[c]();delete rdUnsub[c]}delete clubsLive[c]}
   for(const c of st.clubs){if(unsubs[c])continue;
-    const t=setTimeout(()=>{if(c===st.active&&!clubsLive[c])fnote('Ainda não deu para carregar as leituras dos amigos.')},10000);
-    const u1=readersOf(c).onSnapshot(s=>{clearTimeout(t);clubsLive[c]=s.docs.map(d=>({...d.data(),id:d.id}));trackJoins(c);
-        if(c===st.active){friends=clubsLive[c];loaded=true;renderFriends()}renderNotifs()},
-      e=>{clearTimeout(t);if(c===st.active)fnote(e&&e.code==='permission-denied'?'O Firestore recusou o acesso: confira as regras no LEIAME.':'Não foi possível carregar o clube agora.')});
-    const u2=FS.collection('clubs').doc(c).onSnapshot(d=>{const n=d.exists&&d.data().name;clubNames[c]=typeof n==='string'?n.slice(0,60):'';if(loaded)renderFriends();renderNotifs()},()=>{});
-    unsubs[c]=[u1,u2]}
+    unsubs[c]=[];
+    unsubs[c].push(clubRef(c).onSnapshot(d=>{const m=d.exists?d.data():null;clubMeta[c]=m||null;clubNames[c]=m&&typeof m.name==='string'?m.name.slice(0,60):'';
+        const mem=isMember(c);if(mem!==rdOK[c]||!rdUnsub[c]&&mem)subReaders(c);
+        if(mem&&rdOK[c]&&!clubsLive[c]){}
+        if(isOwner(c))subRequests(c);
+        if(c===st.active){if(!mem)clubState(c);else if(loaded)renderFriends()}
+        if(!$('#admdlg').hidden&&admC===c)renderAdmin();renderNotifs();lastSent='';schedule()},()=>{subReaders(c)}));
+  }
   try{const d=await readersOf(st.clubs[0]).doc(myId).get();const v=d.exists&&d.data();
     if(v&&v.days&&typeof v.days==='object'){for(const k of keysBack(14)){const s=(+v.days[k]||0)*60;if(s>(st.days[k]||0))st.days[k]=s}save()}}catch(e){}
   setActive(st.active&&st.clubs.includes(st.active)?st.active:st.clubs[0]);
@@ -944,13 +1014,39 @@ async function connectClubs(){
 }
 document.addEventListener('click',async e=>{
   if(e.target.closest('#leave')){const c=st.active;if(!c)return;
-    const b=e.target.closest('#leave');if(!b.hasAttribute('data-arm')){b.setAttribute('data-arm','');b.textContent='Toque de novo para sair';return}
-    st.clubs=st.clubs.filter(x=>x!==c);if(unsubs[c]){unsubs[c].forEach(f=>f());delete unsubs[c]}delete clubsLive[c];
-    try{await readersOf(c).doc(myId).delete();await FS.collection('clubs').doc(c).collection('shelves').doc(myId).delete()}catch(err){}
-    st.active=st.clubs[0]||null;save();toast('Você saiu do clube');if(st.active)setActive(st.active);else showJoin(true);renderNotifs();return}
-  if(e.target.closest('#rename')){const c=st.active;const n=(prompt('Nome do clube',clubName(c))||'').trim().slice(0,60);if(!n||!FS)return;
-    try{await FS.collection('clubs').doc(c).set({name:n,by:myId,at:Date.now()});toast('Clube renomeado')}catch(err){toast('Não consegui renomear agora')}}
+    const b=e.target.closest('#leave');if(!b.hasAttribute('data-arm')){b.setAttribute('data-arm','');b.textContent='Toque de novo para confirmar';return}
+    st.clubs=st.clubs.filter(x=>x!==c);if(unsubs[c]){unsubs[c].forEach(f=>f());if(unsubs[c].rq)unsubs[c].rq();delete unsubs[c]}if(rdUnsub[c]){rdUnsub[c]();delete rdUnsub[c]}delete clubsLive[c];
+    try{await readersOf(c).doc(myId).delete()}catch(err){}try{await clubRef(c).collection('shelves').doc(myId).delete()}catch(err){}try{await clubRef(c).collection('requests').doc(myId).delete()}catch(err){}
+    st.active=st.clubs[0]||null;save();toast('Pronto');if(st.active)setActive(st.active);else showJoin(true);renderNotifs();return}
+  if(e.target.closest('#admin'))openAdmin(st.active);
 });
+/* administração do clube */
+let admC=null;
+function openAdmin(c){admC=c;renderAdmin();$('#admdlg').hidden=false}
+$('#admclose').onclick=()=>{$('#admdlg').hidden=true};
+$('#admdlg').addEventListener('click',e=>{if(e.target.id==='admdlg')$('#admdlg').hidden=true});
+function renderAdmin(){
+  const c=admC,m=clubMeta[c]||{},box=$('#admbody');
+  if(!m.owner){box.innerHTML=`<p class="meta">O clube <b>${esc(clubName(c))}</b> foi criado antes de existir administrador. Quem assumir passa a controlar quem entra e sai.</p><button class="btn" id="admclaim" type="button">Assumir a administração</button>`;
+    $('#admclaim').onclick=async()=>{try{const ids=(clubsLive[c]||[]).map(d=>d.id);await clubRef(c).set({name:m.name||'',owner:myId,at:Date.now(),closed:false,members:[...new Set([...ids,myId])],banned:[]},{merge:true});toast('Agora você é o administrador');subRequests(c)}catch(err){toast('Não consegui agora. Confira as regras do Firestore.')}};return}
+  if(!isOwner(c)){box.innerHTML='<p class="meta">Só o administrador do clube pode mexer aqui.</p>';return}
+  const rq=reqs[c]||[],mem=(clubsLive[c]||[]).filter(d=>d.id!==myId),ban=Array.isArray(m.banned)?m.banned:[],bn=m.bnames&&typeof m.bnames==='object'?m.bnames:{};
+  const av=(nick,photo,id)=>`<div class="av" style="background:${['var(--blue)','#d68f22','var(--green)'][hue(id)%3]}">${typeof photo==='string'&&photo.length<12000&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(photo)?`<img src="${photo}" alt="">`:esc((String(nick||'?').trim()[0]||'?').toUpperCase())}</div>`;
+  box.innerHTML=`<label class="fl" style="max-width:none">Nome do clube<span class="hb"><input id="admname" maxlength="60" style="flex:1"><button class="btn sm" id="admsave" type="button">Salvar</button></span></label>
+  <p class="meta" style="margin:-6px 0 16px">Código para convidar: <b>${esc(c)}</b></p>
+  <label class="sw"><input type="checkbox" id="admclosed" ${m.closed?'checked':''}><span><b>Entrada com aprovação</b><small>Quem usar o código precisa ser aceito por você.</small></span></label>
+  ${m.closed||rq.length?`<h3 class="adh">Pedidos para entrar${rq.length?` (${rq.length})`:''}</h3>${rq.length?`<ul class="adl">${rq.map(r=>`<li>${av(r.nick,r.photo,r.id)}<b>${esc(String(r.nick||'Leitor').slice(0,40))}</b><button class="btn sm" data-acc="${esc(r.id)}">Aceitar</button><button class="btn ghost sm" data-dec="${esc(r.id)}">Recusar</button></li>`).join('')}</ul>`:'<p class="meta">Nenhum pedido agora.</p>'}`:''}
+  <h3 class="adh">Membros (${mem.length+1})</h3><ul class="adl"><li>${av(st.nick,st.photoS,myId)}<b>${esc(st.nick||'Você')}</b><span class="meta">administrador</span></li>${mem.map(d=>`<li>${av(d.nick,d.photo,d.id)}<b>${esc(String(d.nick||'Leitor').slice(0,40))}</b><button class="btn ghost sm" data-kick="${esc(d.id)}" data-n="${esc(String(d.nick||'Leitor').slice(0,40))}">Remover</button></li>`).join('')}</ul>
+  ${ban.length?`<h3 class="adh">Removidos</h3><ul class="adl">${ban.map(id=>`<li><b>${esc(String(bn[id]||'Leitor').slice(0,40))}</b><button class="btn ghost sm" data-unban="${esc(id)}">Deixar voltar</button></li>`).join('')}</ul>`:''}`;
+  $('#admname').value=m.name||'';
+  $('#admsave').onclick=async()=>{const n=$('#admname').value.trim().slice(0,60);try{await clubRef(c).update({name:n});toast('Nome salvo')}catch(err){toast('Não consegui salvar')}};
+  $('#admclosed').onchange=async e=>{try{if(e.target.checked){const ids=(clubsLive[c]||[]).map(d=>d.id);await clubRef(c).update({closed:true,members:FV().arrayUnion(...new Set([...ids,myId]))})}else await clubRef(c).update({closed:false});toast(e.target.checked?'Agora só entra quem você aceitar':'Entrada liberada com o código')}catch(err){toast('Não consegui mudar');e.target.checked=!e.target.checked}};
+  box.querySelectorAll('[data-acc]').forEach(b=>b.onclick=async()=>{const id=b.dataset.acc;try{await clubRef(c).update({members:FV().arrayUnion(id)});await clubRef(c).collection('requests').doc(id).delete();toast('Aceito!')}catch(err){toast('Não consegui aceitar')}});
+  box.querySelectorAll('[data-dec]').forEach(b=>b.onclick=async()=>{try{await clubRef(c).collection('requests').doc(b.dataset.dec).delete();toast('Pedido recusado')}catch(err){}});
+  box.querySelectorAll('[data-kick]').forEach(b=>b.onclick=async()=>{if(!b.hasAttribute('data-arm')){b.setAttribute('data-arm','');b.textContent='Confirmar';return}
+    const id=b.dataset.kick;try{await clubRef(c).update({banned:FV().arrayUnion(id),members:FV().arrayRemove(id),['bnames.'+id]:b.dataset.n});try{await readersOf(c).doc(id).delete()}catch(err){}try{await clubRef(c).collection('shelves').doc(id).delete()}catch(err){}toast(b.dataset.n+' foi removido')}catch(err){toast('Não consegui remover')}});
+  box.querySelectorAll('[data-unban]').forEach(b=>b.onclick=async()=>{const id=b.dataset.unban;try{await clubRef(c).update({banned:FV().arrayRemove(id),['bnames.'+id]:FV().delete()});toast('Pode voltar com o código')}catch(err){}});
+}
 /* quem entrou no clube */
 function trackJoins(c){
   st.known=st.known||{};const ids=clubsLive[c].map(d=>d.id).filter(id=>id!==myId);
@@ -994,8 +1090,8 @@ function renderNotifs(){
   if(st.view!=='notif'&&$('#v-notif').hidden===true&&it.length===0){}
   const multi=st.clubs.length>1;
   $('#notifs').innerHTML=it.length?`<ul class="feed nlist">${it.map(n=>{
-    const who=`<b>${esc(n.who)}</b>`,txt=n.t==='cheer'?`${who} torceu por você ${CHE[n.e]}`:n.t==='join'?`${who} entrou no clube`:n.t==='goal'?`${who} bateu a meta do dia`:`${who} ${EVT[n.t]} <i>${esc(n.b)}</i>`;
-    const ic=n.t==='cheer'?CHE[n.e]:n.t==='join'?'<span class="jic">+</span>':`<i class="fi ${n.t}"></i>`;
+    const who=`<b>${esc(n.who)}</b>`,txt=n.t==='req'?`${who} pediu para entrar no clube`:n.t==='cheer'?`${who} torceu por você ${CHE[n.e]}`:n.t==='join'?`${who} entrou no clube`:n.t==='goal'?`${who} bateu a meta do dia`:`${who} ${EVT[n.t]} <i>${esc(n.b)}</i>`;
+    const ic=n.t==='cheer'?CHE[n.e]:n.t==='join'||n.t==='req'?'<span class="jic">+</span>':`<i class="fi ${n.t}"></i>`;
     return `<li class="${n.at>(st.seenN||0)?'new':''}"><span class="fic">${ic}</span><span class="ftx">${txt}${multi?`<small class="ncl">${esc(clubName(n.c))}</small>`:''}</span><small>${agoMs(n.at)}</small></li>`}).join('')}</ul>`
     :`<div class="empty"><h2>Nenhum aviso por enquanto</h2><p>Aqui aparecem as torcidas que você recebe, quem entrou no clube e quando seus amigos batem a meta, começam ou terminam um livro.</p></div>`;
   if(st.view==='notif'&&un){clearTimeout(renderNotifs.t);renderNotifs.t=setTimeout(()=>{st.seenN=Date.now();save();$('#nbadge').hidden=true},2500)}
@@ -1041,7 +1137,7 @@ async function doLogin(em,pw){
   try{await au.signInWithEmailAndPassword(em,pw)}catch(e){toast(authMsg(e));lastSent='';shelfSent='';schedule();return}
   myId=au.currentUser.uid;
   try{const d=await FS.collection('users').doc(myId).get();if(d.exists&&d.data().s)restoreFrom(d.data().s)}catch(e){}
-  for(const c of Object.keys(unsubs)){unsubs[c].forEach(f=>f());delete unsubs[c]}clubsLive={};
+  for(const c of Object.keys(unsubs)){unsubs[c].forEach(f=>f());if(unsubs[c].rq)unsubs[c].rq();delete unsubs[c]}for(const c of Object.keys(rdUnsub)){rdUnsub[c]();delete rdUnsub[c]}clubsLive={};clubMeta={};reqs={};
   lastSent='';shelfSent='';lastBk='';applyTheme();renderMe();home();await connectClubs();backupNow();renderAcc();
   toast('Pronto! Seus dados voltaram.');
 }
