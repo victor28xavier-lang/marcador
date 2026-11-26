@@ -148,6 +148,10 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 #mini b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #mini span{font-size:13px;color:var(--soft)}
 #mini .mp{height:3px;border-radius:3px;background:var(--line);margin-top:6px;overflow:hidden}#mini .mp i{display:block;height:100%;background:var(--acc)}
+.cropv{position:relative;width:min(280px,72vw);aspect-ratio:1;margin:0 auto;overflow:hidden;border-radius:18px;background:#000;touch-action:none;cursor:grab}
+.cropv img{position:absolute;max-width:none;user-select:none;-webkit-user-select:none;pointer-events:none}
+.cropmask{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 999px rgba(0,0,0,.55);pointer-events:none;outline:2px solid rgba(255,255,255,.8);outline-offset:-2px}
+.cropz{display:flex;align-items:center;gap:10px;margin:16px 4px 18px;font-weight:800;color:var(--soft)}.cropz input{flex:1;accent-color:var(--acc)}
 .pfb{overflow:hidden;padding:0;font-weight:800;font-size:18px;background:var(--navy);color:#fff}.pfb img,.av img,.pfi img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
 .av{overflow:hidden}
 .pfh{display:flex;gap:16px;align-items:flex-end;margin-bottom:18px}
@@ -387,6 +391,12 @@ body[data-tab=notif]{--acc:var(--coral)}
   <div class="pfh"><button class="pfav" id="pfphoto" type="button" aria-label="Trocar foto"><span id="pfimg" class="pfi"></span><small>Trocar foto</small></button><input type="file" id="pffile" accept="image/*" hidden>
     <label class="fl" style="flex:1;margin:0">Seu nome<input id="pfname" maxlength="40" autocomplete="nickname"></label></div>
   <div id="pfacc"></div>
+</div></div>
+<div class="dlgw" id="cropdlg" hidden><div class="dlg">
+  <h2 style="margin:0 0 4px">Ajustar foto</h2><p class="meta" style="margin:0 0 14px">Arraste para posicionar e use a barra (ou dois dedos) para aproximar.</p>
+  <div class="cropv" id="cropv"><img id="cropimg" alt="" draggable="false"><i class="cropmask"></i></div>
+  <div class="cropz"><span>−</span><input type="range" id="cropz" min="100" max="400" value="100" step="1" aria-label="Zoom"><span>+</span></div>
+  <div class="dact"><button type="button" class="btn ghost" id="cropcancel">Cancelar</button><button type="button" class="btn" id="cropok">Usar foto</button></div>
 </div></div>
 <div class="dlgw" id="shdlg" hidden><div class="dlg shd"><div class="ph" style="margin:0 0 4px"><h2 id="shname">Estante</h2><button class="icb" id="shclose" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><p class="meta" id="shsub"></p><div class="grid" id="shgrid"></div></div></div>
 <div class="dlgw" id="dlg" hidden>
@@ -1072,8 +1082,31 @@ $('#pfclose').onclick=()=>{$('#pfdlg').hidden=true};
 $('#pfdlg').addEventListener('click',e=>{if(e.target.id==='pfdlg')$('#pfdlg').hidden=true});
 $('#pfname').addEventListener('change',()=>{const n=$('#pfname').value.trim().slice(0,40);if(!n)return;st.nick=n;save();renderMe();schedule();if(loaded)renderFriends();home();toast('Nome atualizado')});
 $('#pfphoto').onclick=()=>$('#pffile').click();
-$('#pffile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{st.photo=await imgToJpeg(f,240,.8);st.photoS=await imgToJpeg(f,80,.7);save();renderMe();renderAcc();schedule();if(loaded)renderFriends();toast('Foto atualizada')}catch(err){toast('Não consegui abrir essa imagem')}};
+/* recorte da foto */
+const CR={img:null,url:'',z:1,x:0,y:0,s0:1,V:280,pts:new Map(),d0:0,z0:1};
+function crLayout(){const {img}=CR;if(!img)return;CR.V=$('#cropv').clientWidth;const V=CR.V,w=img.naturalWidth,h=img.naturalHeight;CR.s0=Math.max(V/w,V/h);
+  const W=w*CR.s0*CR.z,H=h*CR.s0*CR.z,mx=(W-V)/2,my=(H-V)/2;CR.x=Math.max(-mx,Math.min(mx,CR.x));CR.y=Math.max(-my,Math.min(my,CR.y));
+  Object.assign($('#cropimg').style,{width:W+'px',height:H+'px',left:(V/2-W/2+CR.x)+'px',top:(V/2-H/2+CR.y)+'px'})}
+function crExport(N,q){const {img}=CR,k=CR.s0*CR.z,V=CR.V,W=img.naturalWidth*k,H=img.naturalHeight*k;
+  const sx=((W-V)/2-CR.x)/k,sy=((H-V)/2-CR.y)/k,sw=V/k;const c=document.createElement('canvas');c.width=c.height=N;
+  const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,N,N);g.drawImage(img,sx,sy,sw,sw,0,0,N,N);return c.toDataURL('image/jpeg',q)}
+$('#pffile').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  if(CR.url)URL.revokeObjectURL(CR.url);CR.url=URL.createObjectURL(f);const im=$('#cropimg');
+  im.onload=()=>{CR.img=im;CR.z=1;CR.x=0;CR.y=0;$('#cropz').value=100;$('#cropdlg').hidden=false;requestAnimationFrame(crLayout)};
+  im.onerror=()=>toast('Não consegui abrir essa imagem');im.src=CR.url};
+$('#cropz').addEventListener('input',e=>{CR.z=e.target.value/100;crLayout()});
+const cv=$('#cropv');
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);CR.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(CR.pts.size===2){const [a,b]=[...CR.pts.values()];CR.d0=Math.hypot(a.x-b.x,a.y-b.y);CR.z0=CR.z}});
+cv.addEventListener('pointermove',e=>{const p=CR.pts.get(e.pointerId);if(!p)return;
+  if(CR.pts.size===1){CR.x+=e.clientX-p.x;CR.y+=e.clientY-p.y}
+  CR.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(CR.pts.size===2&&CR.d0){const [a,b]=[...CR.pts.values()];CR.z=Math.max(1,Math.min(4,CR.z0*Math.hypot(a.x-b.x,a.y-b.y)/CR.d0));$('#cropz').value=Math.round(CR.z*100)}
+  crLayout()});
+const crEnd=e=>{CR.pts.delete(e.pointerId);if(CR.pts.size<2)CR.d0=0};
+cv.addEventListener('pointerup',crEnd);cv.addEventListener('pointercancel',crEnd);
+cv.addEventListener('wheel',e=>{e.preventDefault();CR.z=Math.max(1,Math.min(4,CR.z*(e.deltaY<0?1.08:.92)));$('#cropz').value=Math.round(CR.z*100);crLayout()},{passive:false});
+$('#cropcancel').onclick=()=>{$('#cropdlg').hidden=true};
+$('#cropok').onclick=()=>{try{st.photo=crExport(240,.82);st.photoS=crExport(80,.72);save();renderMe();renderAcc();schedule();if(loaded)renderFriends();$('#cropdlg').hidden=true;toast('Foto atualizada')}catch(err){toast('Não consegui salvar essa foto')}};
 document.addEventListener('click',async e=>{const b=e.target.closest('#pfout');if(!b)return;
   if(!b.hasAttribute('data-arm')){b.setAttribute('data-arm','');b.textContent='Toque de novo: apaga os dados deste aparelho (o backup fica salvo)';return}
   await backupNow();try{await firebase.auth().signOut()}catch(err){}
