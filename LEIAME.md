@@ -15,6 +15,9 @@ São 4 passos: criar o banco de dados (Firebase), publicar o site, instalar no c
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
     match /clubs/{club} {
       allow read: if request.auth != null;
       allow create, update: if request.auth != null
@@ -23,7 +26,7 @@ service cloud.firestore {
       match /readers/{uid} {
         allow read: if request.auth != null;
         allow create, update: if request.auth != null && request.auth.uid == uid
-          && request.resource.data.keys().hasOnly(['books','days','goal','per','nick','updated','live','cheers','ev']);
+          && request.resource.data.keys().hasOnly(['books','days','goal','per','nick','updated','live','cheers','ev','photo']);
         allow delete: if request.auth != null && request.auth.uid == uid;
       }
       match /shelves/{uid} {

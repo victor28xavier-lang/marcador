@@ -148,6 +148,15 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 #mini b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #mini span{font-size:13px;color:var(--soft)}
 #mini .mp{height:3px;border-radius:3px;background:var(--line);margin-top:6px;overflow:hidden}#mini .mp i{display:block;height:100%;background:var(--acc)}
+.pfb{overflow:hidden;padding:0;font-weight:800;font-size:18px;background:var(--navy);color:#fff}.pfb img,.av img,.pfi img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+.av{overflow:hidden}
+.pfh{display:flex;gap:16px;align-items:flex-end;margin-bottom:18px}
+.pfav{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--acc);font-weight:700}
+.pfi{width:84px;height:84px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font:800 32px Manrope,sans-serif;overflow:hidden;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--amber)}
+.accf h3{margin:0 0 4px;font:700 18px Literata,serif}.accf .meta{margin:0 0 14px}.accf .fl{max-width:none}
+.acclinks{display:flex;flex-wrap:wrap;gap:4px 18px;justify-content:center}.acclinks .dlink{color:var(--acc);margin:8px 0 0}
+.accok{display:grid;gap:2px;background:color-mix(in srgb,var(--green) 14%,transparent);border-radius:16px;padding:14px 16px;margin-bottom:12px}.accok b{color:var(--green)}
+.nfo{position:absolute;inset:auto 0 0 0;z-index:1;background:rgba(29,33,64,.82);color:#fff;font:700 11px/1.25 Manrope,sans-serif;padding:8px 6px;text-align:center}
 .fav{position:absolute;left:6px;bottom:6px;z-index:1;width:26px;height:26px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .fav svg{width:15px;height:15px;fill:var(--coral)}
 .stars{display:flex;gap:1px;margin-top:3px;font-size:13px;line-height:1;color:var(--line)}.stars i{font-style:normal}.stars i.on{color:var(--amber)}
@@ -161,7 +170,7 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 .cbar{margin-top:-6px}.cbar button{position:relative}.cdot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--coral)}
 .bw{position:relative;display:block;line-height:0}.nb{position:absolute;top:-4px;right:-10px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--coral);color:#fff;font:800 11px/18px Manrope,sans-serif;font-style:normal;text-align:center}
 .feed{overflow:hidden}
-#mini .fav{display:none}
+#mini .fav,#mini .nfo,.fbk .nfo,.dhead .nfo{display:none}
 .nlist li.new{background:color-mix(in srgb,var(--acc) 8%,transparent);margin:0 -16px;padding-left:16px;padding-right:16px}
 .ncl{display:block;font-size:12px;color:var(--soft)}
 .jic{width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:800}
@@ -300,7 +309,7 @@ body[data-tab=notif]{--acc:var(--coral)}
 
 <main>
 <section class="view" id="v-home">
-  <div class="ph"><h1><span class="lg" aria-hidden="true"><i></i><i></i><i></i></span>Início</h1><div class="hb"><button class="btn sm" id="inst" hidden>Instalar app</button><button class="icb" id="thb" aria-label="Tema"></button></div></div>
+  <div class="ph"><h1><span class="lg" aria-hidden="true"><i></i><i></i><i></i></span>Início</h1><div class="hb"><button class="btn sm" id="inst" hidden>Instalar app</button><button class="icb" id="thb" aria-label="Tema"></button><button class="icb pfb" id="pfb" aria-label="Seu perfil"></button></div></div>
   <div class="ios" id="ios" hidden><span>Instale: toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>.</span><button class="x" id="iosx" aria-label="Fechar dica">×</button></div>
   <p class="hi" id="hi"></p>
   <div class="card goal">
@@ -373,6 +382,12 @@ body[data-tab=notif]{--acc:var(--coral)}
   <div class="sheet" id="toc" hidden><div id="mkw"></div><h3>Sumário</h3><ol id="tocl"></ol></div>
   <div class="sheet" id="srch" hidden><h3>Buscar no livro</h3><input type="search" id="sq" placeholder="Palavra ou trecho" enterkeyhint="search" autocomplete="off"><p class="lbl" id="sinfo"></p><ol id="srl"></ol></div>
 </div>
+<div class="dlgw" id="pfdlg" hidden><div class="dlg shd">
+  <div class="ph" style="margin:0 0 12px"><h2>Seu perfil</h2><button class="icb" id="pfclose" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="pfh"><button class="pfav" id="pfphoto" type="button" aria-label="Trocar foto"><span id="pfimg" class="pfi"></span><small>Trocar foto</small></button><input type="file" id="pffile" accept="image/*" hidden>
+    <label class="fl" style="flex:1;margin:0">Seu nome<input id="pfname" maxlength="40" autocomplete="nickname"></label></div>
+  <div id="pfacc"></div>
+</div></div>
 <div class="dlgw" id="shdlg" hidden><div class="dlg shd"><div class="ph" style="margin:0 0 4px"><h2 id="shname">Estante</h2><button class="icb" id="shclose" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><p class="meta" id="shsub"></p><div class="grid" id="shgrid"></div></div></div>
 <div class="dlgw" id="dlg" hidden>
   <form class="dlg" id="bookf" autocomplete="off">
@@ -599,7 +614,8 @@ async function openBook(id,parsed){
   try{
     let b=parsed;
     if(!b){let buf=mem[id];if(!buf){try{buf=await getF(id)}catch(e){}}
-      if(!buf){toast('Arquivo não encontrado neste aparelho. Adicione o EPUB de novo.');return}
+      if(!buf){if(st.books[id]){st.books[id].nf=1;save();home()}toast('O arquivo desse livro não está neste aparelho. Toque nele para escolher o EPUB.');return}
+      if(st.books[id]&&!st.books[id].fk)fileKey(buf).then(k=>{if(k&&st.books[id]){st.books[id].fk=k;save()}});
       b=await parse(buf)}
     B=b;B.id=id;st.current=id;save();sess=0;$('#tm').textContent='0:00';
     if(st.books[id]&&st.books[id].title)B.title=st.books[id].title;$('#btitle').textContent=B.title;hideAll();
@@ -652,7 +668,7 @@ const statusOf=m=>['new','reading','done'].includes(m.st)?m.st:(m.pct||0)>=.99?'
 function coverHtml(m){
   const p=+m.pct||0,s=statusOf(m);
   const img=typeof m.cover==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(m.cover)?`<img src="${m.cover}" alt="">`:`<div class="gen" style="--h:${hue(m.title)}"><b>${esc(m.title||'Sem título')}</b><small>${esc(m.author||'')}</small></div>`;
-  return `<div class="cv">${img}<i class="rib ${s==='done'?'done':s==='new'?'new':''}"></i>${s==='done'?`<span class="chk">${CHECK}</span>`:s==='reading'?`<span class="pc">${Math.round(p*100)}%</span>`:''}${m.fav?`<span class="fav"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.5 1.2 4.4 2.5.9-1.3 2.3-2.5 4.4-2.5 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg></span>`:''}</div>`;
+  return `<div class="cv">${img}<i class="rib ${s==='done'?'done':s==='new'?'new':''}"></i>${s==='done'?`<span class="chk">${CHECK}</span>`:s==='reading'?`<span class="pc">${Math.round(p*100)}%</span>`:''}${m.nf?'<span class="nfo">Toque para escolher o arquivo</span>':''}${m.fav?`<span class="fav"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.5 1.2 4.4 2.5.9-1.3 2.3-2.5 4.4-2.5 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg></span>`:''}</div>`;
 }
 const starsHtml=n=>n>0?`<div class="stars" aria-label="${n} de 5 estrelas">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}">★</i>`).join('')}</div>`:'';
 async function thumb(b){
@@ -716,7 +732,7 @@ function home(){
   peakLine();miniBar();schedule();if(loaded)renderFriends();
 }
 document.addEventListener('click',async e=>{
-  const o=e.target.closest('[data-open]');if(o&&!e.target.closest('#reader')){openBook(o.dataset.open);return}
+  const o=e.target.closest('[data-open]');if(o&&!e.target.closest('#reader')){const bm=st.books[o.dataset.open];if(bm&&bm.nf){attachTo=o.dataset.open;toast('Escolha o arquivo EPUB de "'+bm.title+'"');$('#file').click();return}openBook(o.dataset.open);return}
   const x=e.target.closest('[data-edit]');if(x)editBook(x.dataset.edit);
 });
 /* janela de nome e autor */
@@ -753,17 +769,21 @@ async function editBook(id,sub){
     save();home()}
 }
 $('#goal').onchange=e=>{st.goal=+e.target.value;save();home()};
+let attachTo=null;
+async function fileKey(buf){try{const h=await crypto.subtle.digest('SHA-1',buf.slice(0,262144));return [...new Uint8Array(h)].slice(0,10).map(x=>x.toString(16).padStart(2,'0')).join('')+'-'+buf.byteLength}catch(e){return ''}}
 $('#file').onchange=async e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
   $('#load').hidden=false;let b,buf;
   try{buf=await f.arrayBuffer();b=await parse(buf)}catch(err){$('#load').hidden=true;toast(err.message==='lib'?'Não consegui carregar o leitor. Verifique a internet.':'Esse arquivo não parece um EPUB válido.');return}
-  const cover=await thumb(b);$('#load').hidden=true;
+  const cover=await thumb(b),fk=await fileKey(buf);$('#load').hidden=true;
+  const tgt=attachTo&&st.books[attachTo]?attachTo:Object.keys(st.books).find(id=>st.books[id].nf&&((fk&&st.books[id].fk===fk)||st.books[id].title===b.title));attachTo=null;
+  if(tgt){const m=st.books[tgt];mem[tgt]=buf;try{await putF(tgt,buf)}catch(err){}delete m.nf;m.fk=fk||m.fk;if(cover)m.cover=cover;save();home();toast('Arquivo encontrado! Continuando de onde parou.');openBook(tgt,b);return}
   const fromName=f.name.replace(/\.epub$/i,'').replace(/[_]+/g,' ').trim();
   const v=await bookDialog({title:b.title&&b.title!=='Sem título'?b.title:fromName,author:b.author,cover},'add');
   if(!v)return;
   const id='b'+Date.now().toString(36);mem[id]=buf;
   try{await putF(id,buf)}catch(err){toast('Não deu para guardar o arquivo; ele fica só até fechar a página.')}
-  st.books[id]={title:v.title,author:v.author,ch:0,f:0,pct:0,last:Date.now(),cover,rate:v.rate||0,fav:!!v.fav};save();home();openBook(id,b);
+  st.books[id]={title:v.title,author:v.author,ch:0,f:0,pct:0,last:Date.now(),cover,rate:v.rate||0,fav:!!v.fav,fk};save();home();openBook(id,b);
 };
 /* amigos: cada um publica um resumo em readers/<id> */
 let COL=null,unsub=null,myId=null,canWrite=true,friends=[],loaded=false,pushT,pushing=false,dirty=false,lastSent='';
@@ -779,7 +799,7 @@ function summary(){
   if(ids[0])smallCover(ids[0]);
   const days={};for(const k of keysBack(14)){const s=st.days[k]||0;if(s>=60)days[k]=Math.floor(s/60)}
   const per=[0,0,0,0];const k30=keysBack(30);for(const k of Object.keys(st.per||{})){if(!k30.includes(k)){delete st.per[k];continue}st.per[k].forEach((v,i)=>per[i]+=v)}
-  return {live:st.liveAt&&!$('#reader').hidden?Math.floor(st.liveAt/60000)*60000:0,cheers:cleanCheers(st.cheers),ev:cleanEv(st.ev),per:per.map(v=>Math.floor(v/60)),books:ids.slice(0,5).map((id,i)=>{const m=st.books[id];return {...(i===0&&m.cvs&&m.cvs.length<20000?{cv:m.cvs}:{}),t:String(m.title||'').slice(0,200),a:String(m.author||'').slice(0,120),p:Math.round((m.pct||0)*1000)/1000}}),days,goal:st.goal};
+  return {...(okImg(st.photoS)&&st.photoS.length<12000?{photo:st.photoS}:{}),live:st.liveAt&&!$('#reader').hidden?Math.floor(st.liveAt/60000)*60000:0,cheers:cleanCheers(st.cheers),ev:cleanEv(st.ev),per:per.map(v=>Math.floor(v/60)),books:ids.slice(0,5).map((id,i)=>{const m=st.books[id];return {...(i===0&&m.cvs&&m.cvs.length<20000?{cv:m.cvs}:{}),t:String(m.title||'').slice(0,200),a:String(m.author||'').slice(0,120),p:Math.round((m.pct||0)*1000)/1000}}),days,goal:st.goal};
 }
 function schedule(){if(!FS||!myId||!canWrite||!st.clubs||!st.clubs.length)return;clearTimeout(pushT);pushT=setTimeout(push,4000)}
 async function push(){
@@ -805,7 +825,7 @@ const CHE={clap:'👏',fire:'🔥',book:'📚'};
 const EVT={goal:'bateu a meta do dia',done:'terminou',start:'começou'};
 const agoMs=t=>{const m=Math.round((Date.now()-t)/60000);if(m<2)return 'agora';if(m<60)return 'há '+m+' min';const h=Math.round(m/60);if(h<24)return 'há '+h+' h';return 'há '+Math.round(h/24)+' d'};
 const avColor=r=>r.f.me?'var(--navy)':['var(--blue)','#d68f22','var(--green)'][hue(r.f.id)%3];
-const avHtml=(r,cls='av')=>`<div class="${cls}" style="background:${avColor(r)}">${esc((r.name.trim()[0]||'?').toUpperCase())}</div>`;
+const avHtml=(r,cls='av')=>`<div class="${cls}" style="background:${avColor(r)}">${typeof r.f.photo==='string'&&r.f.photo.length<12000&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(r.f.photo)?`<img src="${r.f.photo}" alt="">`:esc((r.name.trim()[0]||'?').toUpperCase())}</div>`;
 const cleanCheers=c=>{const o={};if(c&&typeof c==='object')for(const [k,v] of Object.entries(c)){if(v&&CHE[v.e]&&+v.at>Date.now()-7*864e5)o[String(k).slice(0,128)]={e:v.e,at:+v.at}}return o};
 const cleanEv=a=>Array.isArray(a)?a.filter(x=>x&&EVT[x.t]&&+x.at>0).slice(0,10).map(x=>({t:x.t,b:String(x.b||'').slice(0,120),at:+x.at})):[];
 async function renderFriends(){
@@ -971,6 +991,97 @@ function renderNotifs(){
   if(st.view==='notif'&&un){clearTimeout(renderNotifs.t);renderNotifs.t=setTimeout(()=>{st.seenN=Date.now();save();$('#nbadge').hidden=true},2500)}
 }
 connectClubs();
+/* perfil, conta e backup */
+const isEmailUser=()=>!!(FS&&firebase.auth().currentUser&&!firebase.auth().currentUser.isAnonymous);
+const okImg=u=>typeof u==='string'&&u.length<60000&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(u);
+function renderMe(){const b=$('#pfb');b.innerHTML=okImg(st.photo)?`<img src="${st.photo}" alt="">`:`<span>${esc(((st.nick||'?').trim()[0]||'?').toUpperCase())}</span>`}
+function imgToJpeg(file,size,q){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=size;const s=Math.min(im.naturalWidth,im.naturalHeight);
+  c.getContext('2d').drawImage(im,(im.naturalWidth-s)/2,(im.naturalHeight-s)/2,s,s,0,0,size,size);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',q))};im.onerror=rej;im.src=u})}
+let accMode='create';
+function renderAcc(){
+  $('#pfimg').innerHTML=okImg(st.photo)?`<img src="${st.photo}" alt="">`:`<span>${esc(((st.nick||'?').trim()[0]||'?').toUpperCase())}</span>`;
+  const a=$('#pfacc');
+  if(!CFG||!CFG.apiKey){a.innerHTML='<p class="meta">A conta precisa do Firebase configurado.</p>';return}
+  if(isEmailUser()){const u=firebase.auth().currentUser;
+    a.innerHTML=`<div class="accok"><b>Backup ligado</b><span class="meta">Conectado como ${esc(u.email||'')}</span><span class="meta">${st.bkAt?'Último backup '+agoMs(st.bkAt):'Fazendo o primeiro backup…'}</span></div>
+    <p class="meta">Se desinstalar o app ou trocar de celular, é só entrar com esse e-mail e senha. A estante, o progresso, as notas e os clubes voltam. Os arquivos EPUB você escolhe de novo, e cada livro continua de onde parou.</p>
+    <button class="btn ghost" id="pfout" type="button">Sair da conta</button>`;return}
+  a.innerHTML=`<form class="accf" id="accf"><h3>${accMode==='create'?'Proteja sua leitura':'Entrar na sua conta'}</h3>
+    <p class="meta">${accMode==='create'?'Crie uma conta para ter backup automático. Se desinstalar o app ou trocar de celular, nada se perde.':'Entre com o e-mail e a senha que você usou antes para recuperar seus dados.'}</p>
+    <label class="fl">E-mail<input id="ae" type="email" autocomplete="email" required inputmode="email" autocapitalize="off"></label>
+    <label class="fl">Senha<input id="ap" type="password" autocomplete="${accMode==='create'?'new-password':'current-password'}" minlength="6" required></label>
+    <button class="btn" type="submit">${accMode==='create'?'Criar conta':'Entrar'}</button>
+    <div class="acclinks"><button type="button" class="dlink" id="accsw">${accMode==='create'?'Já tenho conta':'Criar uma conta nova'}</button>${accMode==='login'?'<button type="button" class="dlink" id="accforgot">Esqueci a senha</button>':''}</div></form>`;
+  $('#accsw').onclick=()=>{accMode=accMode==='create'?'login':'create';renderAcc()};
+  const fg=$('#accforgot');if(fg)fg.onclick=async()=>{const em=$('#ae').value.trim();if(!em){toast('Digite seu e-mail primeiro');return}
+    try{await ensureFB();await firebase.auth().sendPasswordResetEmail(em);toast('Enviei um e-mail para criar uma senha nova')}catch(e){toast(authMsg(e))}};
+  $('#accf').onsubmit=async e=>{e.preventDefault();const em=$('#ae').value.trim(),pw=$('#ap').value;const btn=e.target.querySelector('.btn');btn.disabled=true;
+    try{accMode==='create'?await doCreate(em,pw):await doLogin(em,pw)}finally{btn.disabled=false}};
+}
+const authMsg=e=>({'auth/email-already-in-use':'Esse e-mail já tem conta. Toque em "Já tenho conta".','auth/credential-already-in-use':'Esse e-mail já tem conta. Toque em "Já tenho conta".','auth/weak-password':'A senha precisa de pelo menos 6 caracteres.','auth/invalid-email':'Esse e-mail não parece válido.','auth/wrong-password':'Senha errada.','auth/invalid-credential':'E-mail ou senha errados.','auth/invalid-login-credentials':'E-mail ou senha errados.','auth/user-not-found':'Não achei conta com esse e-mail.','auth/too-many-requests':'Muitas tentativas. Espere um pouco e tente de novo.','auth/network-request-failed':'Sem internet agora.','auth/operation-not-allowed':'O login por e-mail ainda não está ativado no Firebase.'}[e&&e.code]||'Não deu certo agora. Tente de novo.');
+async function doCreate(em,pw){
+  if(!(await ensureFB())){toast('Sem conexão com o Firebase agora');return}
+  try{const cred=firebase.auth.EmailAuthProvider.credential(em,pw);await firebase.auth().currentUser.linkWithCredential(cred);
+    toast('Conta criada! Seu backup está ligado.');lastBk='';await backupNow();renderAcc()}catch(e){toast(authMsg(e))}
+}
+async function doLogin(em,pw){
+  if(!(await ensureFB())){toast('Sem conexão com o Firebase agora');return}
+  const au=firebase.auth(),old=au.currentUser,oldUid=old&&old.uid,wasAnon=!!(old&&old.isAnonymous);
+  if(wasAnon&&oldUid)for(const c of st.clubs||[]){try{await readersOf(c).doc(oldUid).delete();await FS.collection('clubs').doc(c).collection('shelves').doc(oldUid).delete()}catch(e){}}
+  try{await au.signInWithEmailAndPassword(em,pw)}catch(e){toast(authMsg(e));lastSent='';shelfSent='';schedule();return}
+  myId=au.currentUser.uid;
+  try{const d=await FS.collection('users').doc(myId).get();if(d.exists&&d.data().s)restoreFrom(d.data().s)}catch(e){}
+  for(const c of Object.keys(unsubs)){unsubs[c].forEach(f=>f());delete unsubs[c]}clubsLive={};
+  lastSent='';shelfSent='';lastBk='';applyTheme();renderMe();home();await connectClubs();backupNow();renderAcc();
+  toast('Pronto! Seus dados voltaram.');
+}
+function restoreFrom(s){
+  const books=s.books&&typeof s.books==='object'?s.books:{};
+  for(const [bid,bm] of Object.entries(books)){if(!bm||typeof bm!=='object')continue;
+    const hit=Object.entries(st.books).find(([,m])=>(bm.fk&&m.fk===bm.fk)||(m.title&&m.title===bm.title));
+    if(hit){const m=hit[1];if((+bm.readAt||0)>(+m.readAt||0))for(const k of ['ch','f','pct','readAt','last','st','chn'])if(bm[k]!==undefined)m[k]=bm[k];
+      for(const k of ['rate','fav','marks','fk','doneEv','startEv'])if(m[k]===undefined&&bm[k]!==undefined)m[k]=bm[k]}
+    else{st.books[bid]={...bm,cover:okImg(bm.cvs)?bm.cvs:'',nf:1}}}
+  if(s.days&&typeof s.days==='object')for(const [k,v] of Object.entries(s.days))st.days[k]=Math.max(+st.days[k]||0,+v||0);
+  if(s.per&&typeof s.per==='object'&&!Object.keys(st.per||{}).length)st.per=s.per;
+  for(const k of ['goal','font','rd','theme','speed','locMode','seenN'])if(s[k]!==undefined&&s[k]!==null)st[k]=s[k];
+  if(Array.isArray(s.clubs))st.clubs=[...new Set([...(st.clubs||[]),...s.clubs.map(clean).filter(c=>c.length>=3)])].slice(0,8);
+  if(s.active&&st.clubs.includes(s.active))st.active=s.active;
+  if(s.nick)st.nick=String(s.nick).slice(0,40);
+  if(okImg(s.photo))st.photo=s.photo;if(okImg(s.photoS))st.photoS=s.photoS;
+  if(Array.isArray(s.ev))st.ev=cleanEv([...(st.ev||[]),...s.ev].sort((a,b)=>b.at-a.at));
+  if(s.cheers)st.cheers={...cleanCheers(s.cheers),...cleanCheers(st.cheers)};
+  if(s.known&&typeof s.known==='object')st.known={...s.known,...(st.known||{})};
+  save();
+}
+let lastBk='',bkBusy=false;
+function bkData(){
+  const books={};for(const [id,m] of Object.entries(st.books)){if(m.cover)smallCover(id);const {cover,askRate,...rest}=m;books[id]=rest}
+  const days={};for(const k of Object.keys(st.days).sort().slice(-400))days[k]=st.days[k];
+  return JSON.parse(JSON.stringify({books,days,per:st.per||{},goal:st.goal,font:st.font,rd:st.rd,theme:st.theme||'auto',speed:st.speed,locMode:st.locMode,clubs:st.clubs||[],active:st.active||null,nick:st.nick||'',photo:st.photo||'',photoS:st.photoS||'',cheers:st.cheers||{},ev:st.ev||[],seenN:st.seenN||0,known:st.known||{}}));
+}
+async function backupNow(){
+  if(bkBusy||!isEmailUser())return;const data=bkData(),key=JSON.stringify(data);if(key===lastBk)return;
+  bkBusy=true;try{await FS.collection('users').doc(myId).set({s:data,at:Date.now()});lastBk=key;st.bkAt=Date.now();save();if(!$('#pfdlg').hidden)renderAcc()}catch(e){}bkBusy=false;
+}
+setInterval(backupNow,30000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')backupNow()});
+/* janela do perfil */
+$('#pfb').onclick=()=>{$('#pfname').value=st.nick||'';renderAcc();$('#pfdlg').hidden=false};
+$('#pfclose').onclick=()=>{$('#pfdlg').hidden=true};
+$('#pfdlg').addEventListener('click',e=>{if(e.target.id==='pfdlg')$('#pfdlg').hidden=true});
+$('#pfname').addEventListener('change',()=>{const n=$('#pfname').value.trim().slice(0,40);if(!n)return;st.nick=n;save();renderMe();schedule();if(loaded)renderFriends();home();toast('Nome atualizado')});
+$('#pfphoto').onclick=()=>$('#pffile').click();
+$('#pffile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{st.photo=await imgToJpeg(f,240,.8);st.photoS=await imgToJpeg(f,80,.7);save();renderMe();renderAcc();schedule();if(loaded)renderFriends();toast('Foto atualizada')}catch(err){toast('Não consegui abrir essa imagem')}};
+document.addEventListener('click',async e=>{const b=e.target.closest('#pfout');if(!b)return;
+  if(!b.hasAttribute('data-arm')){b.setAttribute('data-arm','');b.textContent='Toque de novo: apaga os dados deste aparelho (o backup fica salvo)';return}
+  await backupNow();try{await firebase.auth().signOut()}catch(err){}
+  try{localStorage.removeItem(KEY);localStorage.removeItem('leitor-ios-dica')}catch(err){}
+  try{indexedDB.deleteDatabase('leitor-epub')}catch(err){}
+  location.reload()});
+renderMe();
+
 /* app instalável */
 let deferred=null;
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;$('#inst').hidden=false});
