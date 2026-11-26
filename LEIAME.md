@@ -15,11 +15,23 @@ São 4 passos: criar o banco de dados (Firebase), publicar o site, instalar no c
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /clubs/{club}/readers/{uid} {
+    match /clubs/{club} {
       allow read: if request.auth != null;
-      allow create, update: if request.auth != null && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['books','days','goal','per','nick','updated','live','cheers','ev']);
-      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null
+        && request.resource.data.keys().hasOnly(['name','by','at'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 60;
+      match /readers/{uid} {
+        allow read: if request.auth != null;
+        allow create, update: if request.auth != null && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['books','days','goal','per','nick','updated','live','cheers','ev']);
+        allow delete: if request.auth != null && request.auth.uid == uid;
+      }
+      match /shelves/{uid} {
+        allow read: if request.auth != null;
+        allow create, update: if request.auth != null && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['books','updated']);
+        allow delete: if request.auth != null && request.auth.uid == uid;
+      }
     }
   }
 }
