@@ -819,13 +819,19 @@ function bookDialog(base,mode){
 }
 /* busca de capa, autor e páginas (Google Livros e Open Library) */
 let srT=0,srN=0,srRes=[],srOn=false;
+const nrm=x=>String(x||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();
 async function searchBooks(q){
-  const out=[],seen=new Set(),add=r=>{const k=(r.t+'|'+r.a).toLowerCase();if(r.t&&!seen.has(k)){seen.add(k);out.push(r)}};
-  const g=fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=10&printType=books').then(r=>r.json()).then(j=>(j.items||[]).forEach(it=>{const v=it.volumeInfo||{},im=v.imageLinks||{};let u=(im.thumbnail||im.smallThumbnail||'').replace(/^http:/,'https:').replace(/&edge=curl/,'');
-    add({t:String(v.title||'')+(v.subtitle&&String(v.title||'').length<40?': '+v.subtitle:''),a:(v.authors||[]).join(', '),pg:+v.pageCount||0,u:okUrl(u)?u:''})})).catch(()=>{});
-  const o=fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=8&fields=title,author_name,cover_i,number_of_pages_median').then(r=>r.json()).then(j=>(j.docs||[]).forEach(d=>add({t:String(d.title||''),a:(d.author_name||[]).slice(0,2).join(', '),pg:+d.number_of_pages_median||0,u:d.cover_i?'https://covers.openlibrary.org/b/id/'+(+d.cover_i)+'-M.jpg':''}))).catch(()=>{});
-  await g;await o;
-  return out.sort((x,y)=>(!!y.u)-(!!x.u)).slice(0,12);
+  const out=[],seen=new Set(),add=(r,o)=>{const k=nrm(r.t)+'|'+nrm(r.a);if(r.t&&!seen.has(k)){seen.add(k);r.o=o*100+out.length;out.push(r)}};
+  const G=(qq,o,extra='')=>fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(qq)+'&maxResults=15&printType=books'+extra).then(r=>r.json()).then(j=>(j.items||[]).forEach(it=>{const v=it.volumeInfo||{},im=v.imageLinks||{};let u=(im.thumbnail||im.smallThumbnail||'').replace(/^http:/,'https:').replace(/&edge=curl/,'');
+    add({t:String(v.title||'')+(v.subtitle&&String(v.title||'').length<40?': '+v.subtitle:''),a:(v.authors||[]).join(', '),pg:+v.pageCount||0,u:okUrl(u)?u:''},o)})).catch(()=>{});
+  const O=(qs,o)=>fetch('https://openlibrary.org/search.json?'+qs+'&limit=10&fields=title,author_name,cover_i,number_of_pages_median').then(r=>r.json()).then(j=>(j.docs||[]).forEach(d=>add({t:String(d.title||''),a:(d.author_name||[]).slice(0,2).join(', '),pg:+d.number_of_pages_median||0,u:d.cover_i?'https://covers.openlibrary.org/b/id/'+(+d.cover_i)+'-M.jpg':''},o))).catch(()=>{});
+  const ph=q.replace(/"/g,'');
+  await Promise.all([G('intitle:"'+ph+'"',0,'&langRestrict=pt'),G('intitle:"'+ph+'"',1),O('title='+encodeURIComponent(ph),2),G(ph,3),O('q='+encodeURIComponent(ph),4)]);
+  const nq=nrm(q),ws=nq.split(' ').filter(w=>w.length>1);
+  const sc=r=>{const t=nrm(r.t),a=nrm(r.a);if(t===nq)return 5;if(t.startsWith(nq))return 4;if(t.includes(nq))return 3;if(ws.length&&ws.every(w=>t.includes(w)))return 2;if(ws.length&&ws.every(w=>t.includes(w)||a.includes(w)))return 1;return 0};
+  out.forEach(r=>r.s=sc(r));
+  const good=out.some(r=>r.s>0)?out.filter(r=>r.s>0):out;
+  return good.sort((x,y)=>(y.s-x.s)||((!!y.u)-(!!x.u))||(x.o-y.o)).slice(0,12);
 }
 function runSearch(q){
   clearTimeout(srT);q=q.trim();if(!srOn||q.length<3){$('#bsr').hidden=true;return}
