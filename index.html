@@ -132,6 +132,16 @@ h2{font:700 21px/1.2 Literata,Georgia,serif;margin:0}
 .dhead .cv .rib,.dhead .cv .pc,.dhead .cv .chk{display:none}
 .dhead .gen b{font-size:9px}.dhead .gen small{display:none}
 .dhead p{margin:4px 0 0}
+#bsr{margin:-4px 0 14px}.bsr{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}.bsr::-webkit-scrollbar{display:none}
+.bsr button{flex:none;width:84px;text-align:left;background:none;border:0;padding:0;color:var(--ink);cursor:pointer;font:inherit}
+.bsr button.on .cv{box-shadow:0 0 0 3px var(--acc)}
+.bsr .cv{width:84px;border-radius:6px}.bsr .cv .rib,.bsr .cv .pc,.bsr .cv .chk,.bsr .gen small{display:none}.bsr .gen b{font-size:9px}
+.bsr b.t{display:block;font-size:11px;line-height:1.25;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.bsr small{display:block;font-size:10px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cvb{margin-top:8px;background:none;border:0;padding:0;color:var(--acc);font:800 13px/1.3 Manrope,sans-serif;cursor:pointer;min-height:32px}
+.chs{display:grid;gap:10px}.chb{display:block;text-align:left;width:100%;padding:16px 18px;border-radius:16px;border:2px solid var(--line,rgba(128,128,128,.25));background:var(--card);color:var(--ink);cursor:pointer;font:inherit}
+.chb b{display:block;font-size:16px}.chb small{display:block;color:var(--soft);margin-top:2px;font-size:13px}
+.ebtns{display:flex;flex-wrap:wrap;gap:10px}
+.phy{display:inline-block;margin-top:4px;font:800 10px/16px Manrope,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--soft);border:1.5px solid currentColor;border-radius:5px;padding:0 5px;opacity:.8}
 .dlg .fl{max-width:none}
 .flb{font-weight:600;margin:0 0 6px}
 .progrow{display:flex;align-items:center;gap:12px}.progrow input{flex:1;accent-color:var(--acc);height:32px}.progrow output{min-width:48px;text-align:right;font-weight:800}
@@ -339,11 +349,11 @@ body[data-tab=notif]{--acc:var(--coral)}
   <div id="reading"></div>
 </section>
 <section class="view" id="v-shelf" hidden>
-  <div class="ph"><h1><span class="lg" aria-hidden="true"><i></i><i></i><i></i></span>Estante</h1><label class="icb" for="file" aria-label="Adicionar EPUB" role="button" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></label></div>
+  <div class="ph"><h1><span class="lg" aria-hidden="true"><i></i><i></i><i></i></span>Estante</h1><button class="icb" id="addb" type="button" aria-label="Adicionar livro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
   <div class="card stat3"><div><b id="nb">0</b>livros</div><div><b id="nd">0</b>lidos</div><div><b id="nm">0</b>minutos lidos</div></div>
   <div class="chips" id="chips"><button data-f="all" class="on">Todos</button><button data-f="reading"><i style="background:var(--blue)"></i>Lendo</button><button data-f="done"><i style="background:var(--green)"></i>Lidos</button><button data-f="new"><i style="background:var(--amber)"></i>Não iniciados</button><button data-f="fav"><span class="hic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.5 1.2 4.4 2.5.9-1.3 2.3-2.5 4.4-2.5 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg></span>Favoritos</button></div>
   <div class="grid" id="lib"></div>
-  <p class="note">Os arquivos dos livros ficam só neste aparelho e o app funciona sem internet. Os amigos do clube veem só o seu apelido, o título, o autor, a porcentagem lida e os seus minutos por dia e por período. O tempo conta enquanto o livro está aberto e você está mexendo nele; depois de 2 minutos parado, pausa sozinho.</p>
+  <p class="note">Livros físicos entram pelo + também: é só escolher "Livro físico" e registrar o progresso e os minutos à mão. Os arquivos EPUB ficam só neste aparelho e o app funciona sem internet. Os amigos do clube veem só o seu apelido, o título, o autor, a porcentagem lida e os seus minutos por dia e por período. O tempo conta enquanto o livro está aberto e você está mexendo nele; depois de 2 minutos parado, pausa sozinho.</p>
 </section>
 <section class="view" id="v-notif" hidden>
   <div class="ph"><h1><span class="lg" aria-hidden="true"><i></i><i></i><i></i></span>Avisos</h1></div>
@@ -416,8 +426,9 @@ body[data-tab=notif]{--acc:var(--coral)}
 <div class="dlgw" id="shdlg" hidden><div class="dlg shd"><div class="ph" style="margin:0 0 4px"><h2 id="shname">Estante</h2><button class="icb" id="shclose" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><p class="meta" id="shsub"></p><div class="grid" id="shgrid"></div></div></div>
 <div class="dlgw" id="dlg" hidden>
   <form class="dlg" id="bookf" autocomplete="off">
-    <div class="dhead"><div id="dcv"></div><div><h2 id="dtitle">Adicionar livro</h2><p class="meta" id="dsub">Confira o nome e o autor antes de colocar na estante.</p></div></div>
+    <div class="dhead"><div id="dcv"></div><div><h2 id="dtitle">Adicionar livro</h2><p class="meta" id="dsub">Confira o nome e o autor antes de colocar na estante.</p><button type="button" class="cvb" id="dcvb" hidden>Escolher foto da capa</button></div></div>
     <label class="fl">Nome do livro<input id="bt" maxlength="200" required enterkeyhint="next"></label>
+    <div id="bsr" hidden><p class="flb" id="bsrl">Achei estes. Toque no seu:</p><div class="bsr" id="bsrw"></div></div>
     <label class="fl">Autor<input id="ba" maxlength="120" enterkeyhint="done"></label>
     <div class="rf2"><div><p class="flb">Sua nota</p><div class="rate" id="drate"><button type="button" data-r="1" aria-label="1 estrela">★</button><button type="button" data-r="2" aria-label="2 estrelas">★</button><button type="button" data-r="3" aria-label="3 estrelas">★</button><button type="button" data-r="4" aria-label="4 estrelas">★</button><button type="button" data-r="5" aria-label="5 estrelas">★</button></div></div><button type="button" class="favb" id="dfav" aria-pressed="false" aria-label="Favoritar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.5 1.2 4.4 2.5.9-1.3 2.3-2.5 4.4-2.5 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg><span>Favorito</span></button></div>
     <div id="dprog"><p class="flb">Onde você está</p>
@@ -431,6 +442,12 @@ body[data-tab=notif]{--acc:var(--coral)}
     <button type="button" class="dlink" id="ddel" hidden>Remover livro da estante</button>
   </form>
 </div>
+<div class="dlgw" id="addch" hidden><div class="dlg">
+  <h2 style="margin:0">Adicionar livro</h2><p class="meta" style="margin:4px 0 16px">Como você vai ler esse?</p>
+  <div class="chs"><label class="chb" for="file" id="addE"><b>EPUB</b><small>Ler aqui no app</small></label><button type="button" class="chb" id="addP"><b>Livro físico</b><small>Registrar na estante e anotar o progresso</small></button></div>
+  <button type="button" class="dlink" id="addX" style="color:var(--soft)">Cancelar</button>
+</div></div>
+<input type="file" id="dcvf" accept="image/*" hidden>
 <div id="load" hidden>Abrindo livro…</div>
 <div id="toast" role="status" hidden></div>
 
@@ -641,6 +658,7 @@ tap($('#fm'),()=>setFont(st.font-1));tap($('#fp'),()=>setFont(st.font+1));
 let rzT;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(B){layout();fitCard()}},150)});
 if(document.fonts)document.fonts.ready.then(()=>{if(B)layout()});
 async function openBook(id,parsed){
+  if(st.books[id]&&st.books[id].phys){editBook(id);return}
   $('#load').hidden=false;
   try{
     let b=parsed;
@@ -698,9 +716,11 @@ const DOW=['D','S','T','Q','Q','S','S'];
 const CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const hue=s=>{let h=7;for(const c of String(s||''))h=(h*31+c.charCodeAt(0))%360;return h};
 const statusOf=m=>['new','reading','done'].includes(m.st)?m.st:(m.pct||0)>=.99?'done':(m.pct||0)>.004?'reading':'new';
+const okUrl=u=>typeof u==='string'&&u.length<400&&/^https:\/\/(books\.google\.com|books\.googleusercontent\.com|covers\.openlibrary\.org)\/[^"'<>\s\\]+$/.test(u);
+const cvSrc=m=>typeof m.cover==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(m.cover)?m.cover:okUrl(m.cover)?m.cover:okUrl(m.cu)?m.cu:'';
 function coverHtml(m){
-  const p=+m.pct||0,s=statusOf(m);
-  const img=typeof m.cover==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(m.cover)?`<img src="${m.cover}" alt="">`:`<div class="gen" style="--h:${hue(m.title)}"><b>${esc(m.title||'Sem título')}</b><small>${esc(m.author||'')}</small></div>`;
+  const p=+m.pct||0,s=statusOf(m),src=cvSrc(m);
+  const img=src?`<img src="${esc(src)}" alt="" referrerpolicy="no-referrer">`:`<div class="gen" style="--h:${hue(m.title)}"><b>${esc(m.title||'Sem título')}</b><small>${esc(m.author||'')}</small></div>`;
   return `<div class="cv">${img}<i class="rib ${s==='done'?'done':s==='new'?'new':''}"></i>${s==='done'?`<span class="chk">${CHECK}</span>`:s==='reading'?`<span class="pc">${Math.round(p*100)}%</span>`:''}${m.nf?'<span class="nfo">Toque para escolher o arquivo</span>':''}${m.fav?`<span class="fav"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.5 1.2 4.4 2.5.9-1.3 2.3-2.5 4.4-2.5 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg></span>`:''}</div>`;
 }
 const starsHtml=n=>n>0?`<div class="stars" aria-label="${n} de 5 estrelas">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}">★</i>`).join('')}</div>`:'';
@@ -731,9 +751,9 @@ function miniBar(){
   if(!cur||st.view==='club'||st.view==='notif'||!$('#reader').hidden){el.hidden=true;return}
   const m=st.books[cur],p=Math.round((m.pct||0)*100);
   el.dataset.open=cur;el.hidden=false;
-  el.innerHTML=`${coverHtml(m)}<div class="mb"><b>${esc(m.title)}</b><span>Continuar lendo · ${p}%</span><div class="mp"><i style="width:${p}%"></i></div></div>`;
+  el.innerHTML=`${coverHtml(m)}<div class="mb"><b>${esc(m.title)}</b><span>${m.phys?'Livro físico':'Continuar lendo'} · ${p}%</span><div class="mp"><i style="width:${p}%"></i></div></div>`;
 }
-const tileHtml=(id,extra='')=>{const m=st.books[id];return `<button class="tile" data-open="${esc(id)}">${coverHtml(m)}<div class="tt">${esc(m.title)}</div><div class="ta">${esc(m.author||'')}</div>${starsHtml(+m.rate||0)}</button>${extra}`};
+const tileHtml=(id,extra='')=>{const m=st.books[id];return `<button class="tile" data-open="${esc(id)}">${coverHtml(m)}<div class="tt">${esc(m.title)}</div><div class="ta">${esc(m.author||'')}</div>${m.phys?'<span class="phy">físico</span>':''}${starsHtml(+m.rate||0)}</button>${extra}`};
 function home(){
   const g=st.goal,k=dk(),secs=st.days[k]||0,C=2*Math.PI*86;
   $('#goal').value=String(g);
@@ -754,18 +774,18 @@ function home(){
   const ids=sorted();
   const reading=nowReading();
   $('#reading').innerHTML=ids.length?`<div class="shelfrow">${(reading.length?reading:ids).map(id=>`<div class="rtile">${tileHtml(id)}<button class="upd" data-edit="${esc(id)}">Atualizar leitura</button></div>`).join('')}</div>`
-    :`<div class="empty"><h2>Estante novinha em folha</h2><p>Coloque aqui o EPUB que você está lendo. O Marcador guarda onde você parou e conta cada minuto pra sua meta.</p><label class="btn" for="file" role="button" tabindex="0">Adicionar EPUB</label></div>`;
+    :`<div class="empty"><h2>Estante novinha em folha</h2><p>Coloque aqui o EPUB que você está lendo ou registre um livro físico. O Marcador guarda onde você parou e conta cada minuto pra sua meta.</p><div class="ebtns"><label class="btn" for="file" role="button" tabindex="0">Adicionar EPUB</label><button class="btn ghost" type="button" data-phys>Livro físico</button></div></div>`;
   $('#nb').textContent=ids.length;$('#nd').textContent=ids.filter(id=>statusOf(st.books[id])==='done').length;
   $('#nm').textContent=Math.round(Object.values(st.days).reduce((a,b)=>a+(+b||0),0)/60).toLocaleString('pt-BR');
   document.querySelectorAll('#chips button').forEach(b=>b.classList.toggle('on',b.dataset.f===st.filter));
   const shown=ids.filter(id=>st.filter==='all'||(st.filter==='fav'?st.books[id].fav:statusOf(st.books[id])===st.filter));
   $('#lib').innerHTML=shown.length?shown.map(id=>{const m=st.books[id],s=statusOf(m);
       return `<div class="it">${tileHtml(id,`<div class="bar2"><span class="pill">${s==='done'?'Lido':s==='new'?'Novo':Math.round((m.pct||0)*100)+'%'}</span><button class="more" data-edit="${esc(id)}" aria-label="Editar ou remover livro">···</button></div>`)}</div>`}).join('')
-    :`<p class="meta" style="grid-column:1/-1">${ids.length?(st.filter==='fav'?'Nenhum favorito ainda. Toque no ··· de um livro e marque o coração.':'Nenhum livro com esse marcador.'):'Toque no + para adicionar seu primeiro EPUB.'}</p>`;
+    :`<p class="meta" style="grid-column:1/-1">${ids.length?(st.filter==='fav'?'Nenhum favorito ainda. Toque no ··· de um livro e marque o coração.':'Nenhum livro com esse marcador.'):'Toque no + para adicionar seu primeiro livro.'}</p>`;
   peakLine();miniBar();schedule();if(loaded)renderFriends();
 }
 document.addEventListener('click',async e=>{
-  const o=e.target.closest('[data-open]');if(o&&!e.target.closest('#reader')){const bm=st.books[o.dataset.open];if(bm&&bm.nf){attachTo=o.dataset.open;toast('Escolha o arquivo EPUB de "'+bm.title+'"');$('#file').click();return}openBook(o.dataset.open);return}
+  const o=e.target.closest('[data-open]');if(o&&!e.target.closest('#reader')){const bm=st.books[o.dataset.open];if(bm&&bm.phys){editBook(o.dataset.open);return}if(bm&&bm.nf){attachTo=o.dataset.open;toast('Escolha o arquivo EPUB de "'+bm.title+'"');$('#file').click();return}openBook(o.dataset.open);return}
   const x=e.target.closest('[data-edit]');if(x)editBook(x.dataset.edit);
 });
 /* janela de nome e autor */
@@ -784,18 +804,58 @@ function bookDialog(base,mode){
   dlgBase=base;$('#bt').value=base.title||'';$('#ba').value=base.author||'';
   $('#dtitle').textContent=mode==='add'?'Adicionar livro':'Editar livro';
   $('#dsub').textContent=mode==='add'?(base.title?'Já preenchi com o que veio no arquivo. Ajuste se quiser.':'Esse arquivo não trouxe o nome. Preencha abaixo.'):'Atualize onde você está, a nota, o status ou os dados do livro.';
-  $('#dok').textContent=mode==='add'?'Adicionar':'Salvar';
+  const ph=mode==='phys';$('#dcvb').hidden=!(ph||base.phys);$('#dcvb').textContent=base.cover?'Trocar foto da capa':'Escolher foto da capa (opcional)';
+  if(ph){$('#dtitle').textContent='Adicionar livro físico';$('#dsub').textContent='Digite o nome: eu busco a capa, o autor e as páginas.'}
+  $('#dok').textContent=mode==='edit'?'Salvar':'Adicionar';
   const del=$('#ddel');del.hidden=mode==='add';del.removeAttribute('data-arm');del.textContent='Remover livro da estante';
-  $('#dstw').hidden=mode==='add';dlgSt=mode==='add'?null:statusOf(base);markSt();
+  $('#dstw').hidden=mode==='add';dlgSt=mode==='add'?null:ph?'done':statusOf(base);markSt();
   dlgRate=Math.max(0,Math.min(5,+base.rate||0));dlgFav=!!base.fav;markRate();
-  $('#dprog').hidden=mode==='add';const p0=Math.round((+base.pct||0)*100);$('#dpct').value=p0;$('#dpcto').textContent=p0+'%';$('#dpgt').value=base.ptot||'';$('#dpg').value=base.ptot?Math.round((+base.pct||0)*base.ptot):'';$('#dmin').value='';dlgP0=p0;
+  $('#dprog').hidden=mode==='add';$('#dprog').querySelectorAll('.addm,.addm+*,.flb[style]').forEach(x=>x.hidden=ph);const p0=Math.round((+base.pct||0)*100);$('#dpct').value=p0;$('#dpcto').textContent=p0+'%';$('#dpgt').value=base.ptot||'';$('#dpg').value=base.ptot?Math.round((+base.pct||0)*base.ptot):'';$('#dmin').value='';dlgP0=p0;
+  if(ph)setPct(100);
+  srOn=ph||!!base.phys||(mode==='add'&&!base.cover);srN++;srRes=[];$('#bsr').hidden=true;$('#bsrw').innerHTML='';
+  if(srOn&&base.title&&!cvSrc(base))runSearch(base.title+' '+(base.author||''));
   dcv();$('#dlg').hidden=false;
   return new Promise(res=>{dlgDone=res});
 }
+/* busca de capa, autor e páginas (Google Livros e Open Library) */
+let srT=0,srN=0,srRes=[],srOn=false;
+async function searchBooks(q){
+  const out=[],seen=new Set(),add=r=>{const k=(r.t+'|'+r.a).toLowerCase();if(r.t&&!seen.has(k)){seen.add(k);out.push(r)}};
+  const g=fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=10&printType=books').then(r=>r.json()).then(j=>(j.items||[]).forEach(it=>{const v=it.volumeInfo||{},im=v.imageLinks||{};let u=(im.thumbnail||im.smallThumbnail||'').replace(/^http:/,'https:').replace(/&edge=curl/,'');
+    add({t:String(v.title||'')+(v.subtitle&&String(v.title||'').length<40?': '+v.subtitle:''),a:(v.authors||[]).join(', '),pg:+v.pageCount||0,u:okUrl(u)?u:''})})).catch(()=>{});
+  const o=fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=8&fields=title,author_name,cover_i,number_of_pages_median').then(r=>r.json()).then(j=>(j.docs||[]).forEach(d=>add({t:String(d.title||''),a:(d.author_name||[]).slice(0,2).join(', '),pg:+d.number_of_pages_median||0,u:d.cover_i?'https://covers.openlibrary.org/b/id/'+(+d.cover_i)+'-M.jpg':''}))).catch(()=>{});
+  await g;await o;
+  return out.sort((x,y)=>(!!y.u)-(!!x.u)).slice(0,12);
+}
+function runSearch(q){
+  clearTimeout(srT);q=q.trim();if(!srOn||q.length<3){$('#bsr').hidden=true;return}
+  srT=setTimeout(async()=>{const n=++srN;$('#bsr').hidden=false;$('#bsrl').textContent='Procurando…';$('#bsrw').innerHTML='';
+    const r=await searchBooks(q);if(n!==srN||!srOn)return;srRes=r;
+    if(!r.length){$('#bsrl').textContent='Não achei esse livro. Pode preencher à mão ou pôr uma foto.';return}
+    $('#bsrl').textContent='Achei estes. Toque no seu para puxar capa, autor e páginas:';
+    $('#bsrw').innerHTML=r.map((x,i)=>`<button type="button" data-sr="${i}">${coverHtml({title:x.t,author:x.a,cover:x.u,pct:0,st:'new'})}<b class="t">${esc(x.t)}</b><small>${esc(x.a)}</small></button>`).join('')},550);
+}
+function toData(u){return new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';im.referrerPolicy='no-referrer';
+  im.onload=()=>{try{if(im.naturalWidth<20)return res('');const W=240,H=360,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),r=Math.max(W/im.naturalWidth,H/im.naturalHeight),w=im.naturalWidth*r,h=im.naturalHeight*r;
+    x.fillStyle='#fff';x.fillRect(0,0,W,H);x.drawImage(im,(W-w)/2,(H-h)/2,w,h);res(c.toDataURL('image/jpeg',.75))}catch(e){res('')}};im.onerror=()=>res('');im.src=u;setTimeout(()=>res(''),8000)})}
+$('#bsrw').addEventListener('click',async e=>{const b=e.target.closest('[data-sr]');if(!b)return;const x=srRes[+b.dataset.sr];if(!x)return;
+  document.querySelectorAll('#bsrw button').forEach(k=>k.classList.toggle('on',k===b));
+  $('#bt').value=x.t.slice(0,200);if(x.a)$('#ba').value=x.a.slice(0,120);
+  if(x.pg&&!+$('#dpgt').value){$('#dpgt').value=x.pg;$('#dpg').value=Math.round(+$('#dpct').value/100*x.pg)}
+  if(x.u){const d=await toData(x.u);dlgBase={...dlgBase,cover:d||x.u};$('#dcvb').textContent='Trocar foto da capa'}
+  dcv();
+});
+$('#bt').addEventListener('input',e=>runSearch(e.target.value));
+$('#dcvb').onclick=()=>$('#dcvf').click();
+$('#dcvf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const url=URL.createObjectURL(f),im=new Image();im.src=url;await im.decode();
+    const W=240,H=360,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),r=Math.max(W/im.naturalWidth,H/im.naturalHeight),w=im.naturalWidth*r,h=im.naturalHeight*r;
+    x.fillStyle='#fff';x.fillRect(0,0,W,H);x.drawImage(im,(W-w)/2,(H-h)/2,w,h);URL.revokeObjectURL(url);
+    dlgBase={...dlgBase,cover:c.toDataURL('image/jpeg',.72)};$('#dcvb').textContent='Trocar foto da capa';dcv()}catch(err){toast('Não consegui abrir essa foto.')}};
 const dcv=()=>{$('#dcv').innerHTML=coverHtml({...dlgBase,title:$('#bt').value||'Sem título',author:$('#ba').value,pct:0,st:undefined})};
 $('#bt').addEventListener('input',dcv);$('#ba').addEventListener('input',dcv);
-function closeDlg(v){$('#dlg').hidden=true;const f=dlgDone;dlgDone=null;if(f)f(v)}
-$('#bookf').addEventListener('submit',e=>{e.preventDefault();const t=$('#bt').value.trim();if(!t){$('#bt').focus();return}closeDlg({title:t.slice(0,200),author:$('#ba').value.trim().slice(0,120),st:dlgSt,rate:dlgRate,fav:dlgFav,pct:+$('#dpct').value,ptot:Math.max(0,Math.min(20000,+$('#dpgt').value||0)),min:Math.max(0,Math.min(600,Math.round(+$('#dmin').value||0)))})});
+function closeDlg(v){$('#dlg').hidden=true;srOn=false;srN++;clearTimeout(srT);const f=dlgDone;dlgDone=null;if(f)f(v)}
+$('#bookf').addEventListener('submit',e=>{e.preventDefault();const t=$('#bt').value.trim();if(!t){$('#bt').focus();return}closeDlg({title:t.slice(0,200),author:$('#ba').value.trim().slice(0,120),st:dlgSt,rate:dlgRate,fav:dlgFav,pct:+$('#dpct').value,ptot:Math.max(0,Math.min(20000,+$('#dpgt').value||0)),min:Math.max(0,Math.min(600,Math.round(+$('#dmin').value||0))),cover:dlgBase.cover||''})});
 $('#dcancel').onclick=()=>closeDlg(null);
 $('#dlg').addEventListener('click',e=>{if(e.target.id==='dlg')closeDlg(null)});
 $('#ddel').onclick=()=>{const d=$('#ddel');if(!d.hasAttribute('data-arm')){d.setAttribute('data-arm','');d.textContent='Toque de novo para remover';return}closeDlg('delete')};
@@ -808,12 +868,27 @@ async function editBook(id,sub){
   const m=st.books[id];if(!m)return;
   const pr=bookDialog(m,'edit');if(sub)$('#dsub').textContent=sub;const v=await pr;
   if(v==='delete'){delete st.books[id];delete mem[id];if(st.current===id)st.current=null;save();try{await delF(id)}catch(err){}home();toast('Livro removido');return}
-  if(v){m.title=v.title;m.author=v.author;m.rate=v.rate;m.fav=v.fav;if(v.ptot)m.ptot=v.ptot;
+  if(v){m.title=v.title;m.author=v.author;m.rate=v.rate;m.fav=v.fav;if(v.cover&&v.cover!==m.cover&&(m.phys||!cvSrc(m))){m.cover=v.cover;delete m.cvs;if(okUrl(v.cover))m.cu=v.cover;else delete m.cu}if(v.ptot)m.ptot=v.ptot;
     if(v.pct!==dlgP0){m.pct=v.pct/100;m.jumpPct=v.pct/100;m.readAt=Date.now();delete m.st;if(v.pct>=100&&!m.doneEv){m.doneEv=1;addEv('done',m.title)}else if(v.pct>0&&!m.startEv){m.startEv=1;addEv('start',m.title)}}
     if(v.min){addMinutes(v.min);m.readAt=Date.now()}
     if(v.st&&v.st!==statusOf(m)){m.st=v.st;if(v.st==='done'&&!m.doneEv){m.doneEv=1;addEv('done',m.title)}if(v.st==='done')m.pct=Math.max(m.pct||0,1);if(v.st==='new'){m.pct=0;m.ch=0;m.f=0}}
     save();home()}
 }
+async function addPhys(){
+  const v=await bookDialog({title:'',author:'',cover:'',phys:1},'phys');if(!v)return;
+  const s=v.st||'done',pct=s==='done'?1:s==='new'?0:v.pct/100,id='b'+Date.now().toString(36);
+  const m={title:v.title,author:v.author,ch:0,f:0,pct,last:Date.now(),readAt:Date.now(),cover:v.cover||'',...(okUrl(v.cover)?{cu:v.cover}:{}),rate:v.rate||0,fav:!!v.fav,phys:1,st:s};
+  if(v.ptot)m.ptot=v.ptot;
+  st.books[id]=m;
+  if(s==='done'){m.doneEv=1;addEv('done',m.title)}else if(s==='reading'){m.startEv=1;addEv('start',m.title)}
+  save();home();toast('Livro físico na estante!');
+}
+$('#addb').onclick=()=>{$('#addch').hidden=false};
+const closeCh=()=>{$('#addch').hidden=true};
+$('#addX').onclick=closeCh;$('#addch').addEventListener('click',e=>{if(e.target.id==='addch')closeCh()});
+$('#addE').addEventListener('click',closeCh);
+$('#addP').onclick=()=>{closeCh();addPhys()};
+document.addEventListener('click',e=>{if(e.target.closest('[data-phys]'))addPhys()});
 $('#goal').onchange=e=>{st.goal=+e.target.value;save();home()};
 let attachTo=null;
 async function fileKey(buf){try{const h=await crypto.subtle.digest('SHA-1',buf.slice(0,262144));return [...new Uint8Array(h)].slice(0,10).map(x=>x.toString(16).padStart(2,'0')).join('')+'-'+buf.byteLength}catch(e){return ''}}
@@ -829,7 +904,7 @@ $('#file').onchange=async e=>{
   if(!v)return;
   const id='b'+Date.now().toString(36);mem[id]=buf;
   try{await putF(id,buf)}catch(err){toast('Não deu para guardar o arquivo; ele fica só até fechar a página.')}
-  st.books[id]={title:v.title,author:v.author,ch:0,f:0,pct:0,last:Date.now(),cover,rate:v.rate||0,fav:!!v.fav,fk};save();home();openBook(id,b);
+  st.books[id]={title:v.title,author:v.author,ch:0,f:0,pct:0,last:Date.now(),cover:cover||v.cover||'',...(!cover&&okUrl(v.cover)?{cu:v.cover}:{}),rate:v.rate||0,fav:!!v.fav,fk};save();home();openBook(id,b);
 };
 /* amigos: cada um publica um resumo em readers/<id> */
 let COL=null,unsub=null,myId=null,canWrite=true,friends=[],loaded=false,pushT,pushing=false,dirty=false,lastSent='';
@@ -1059,7 +1134,7 @@ function trackJoins(c){
 function shelfData(){
   const ids=Object.keys(st.books).sort((a,b)=>({reading:0,new:1,done:2}[statusOf(st.books[a])]-{reading:0,new:1,done:2}[statusOf(st.books[b])])||byRead(a,b)).slice(0,80);
   return ids.map((id,i)=>{const m=st.books[id];if(i<40)smallCover(id);
-    return {t:String(m.title||'').slice(0,200),a:String(m.author||'').slice(0,120),p:Math.round((m.pct||0)*20)/20,s:statusOf(m),r:Math.max(0,Math.min(5,+m.rate||0)),f:!!m.fav,...(i<40&&m.cvs&&m.cvs.length<20000?{cv:m.cvs}:{})}});
+    return {t:String(m.title||'').slice(0,200),a:String(m.author||'').slice(0,120),p:Math.round((m.pct||0)*20)/20,s:statusOf(m),r:Math.max(0,Math.min(5,+m.rate||0)),f:!!m.fav,...(m.phys?{ph:1}:{}),...(i<40&&m.cvs&&m.cvs.length<20000?{cv:m.cvs}:okUrl(m.cu)?{cu:m.cu}:{})}});
 }
 async function openShelf(uid,name){
   if(!FS||!st.active)return;
@@ -1068,7 +1143,7 @@ async function openShelf(uid,name){
     const fav=bs.filter(b=>b&&b.f).length,done=bs.filter(b=>b&&b.s==='done').length;
     $('#shsub').textContent=bs.length?`${bs.length} ${bs.length>1?'livros':'livro'} · ${done} ${done===1?'lido':'lidos'} · ${fav} ${fav===1?'favorito':'favoritos'}`:'';
     $('#shgrid').innerHTML=bs.length?bs.filter(Boolean).map(b=>{const s=['reading','new','done'].includes(b.s)?b.s:'new';
-      return `<div class="it">${coverHtml({title:String(b.t||''),author:String(b.a||''),pct:s==='done'?1:s==='new'?0:Math.max(.01,+b.p||0),st:s,fav:!!b.f,cover:typeof b.cv==='string'&&b.cv.length<20000?b.cv:''})}<div class="tt">${esc(b.t||'')}</div><div class="ta">${esc(b.a||'')}</div>${starsHtml(+b.r||0)}</div>`}).join('')
+      return `<div class="it">${coverHtml({title:String(b.t||''),author:String(b.a||''),pct:s==='done'?1:s==='new'?0:Math.max(.01,+b.p||0),st:s,fav:!!b.f,cover:typeof b.cv==='string'&&b.cv.length<20000?b.cv:'',cu:b.cu})}<div class="tt">${esc(b.t||'')}</div><div class="ta">${esc(b.a||'')}</div>${b.ph?'<span class="phy">físico</span>':''}${starsHtml(+b.r||0)}</div>`}).join('')
       :'<p class="meta">Essa estante ainda está vazia, ou essa pessoa ainda não atualizou o app.</p>'}
   catch(e){$('#shgrid').innerHTML='<p class="meta">Não consegui abrir essa estante agora.</p>'}
 }
@@ -1147,7 +1222,7 @@ function restoreFrom(s){
     const hit=Object.entries(st.books).find(([,m])=>(bm.fk&&m.fk===bm.fk)||(m.title&&m.title===bm.title));
     if(hit){const m=hit[1];if((+bm.readAt||0)>(+m.readAt||0))for(const k of ['ch','f','pct','readAt','last','st','chn'])if(bm[k]!==undefined)m[k]=bm[k];
       for(const k of ['rate','fav','marks','fk','doneEv','startEv'])if(m[k]===undefined&&bm[k]!==undefined)m[k]=bm[k]}
-    else{st.books[bid]={...bm,cover:okImg(bm.cvs)?bm.cvs:'',nf:1}}}
+    else{st.books[bid]={...bm,cover:okImg(bm.cvs)?bm.cvs:'',...(bm.phys?{}:{nf:1})}}}
   if(s.days&&typeof s.days==='object')for(const [k,v] of Object.entries(s.days))st.days[k]=Math.max(+st.days[k]||0,+v||0);
   if(s.per&&typeof s.per==='object'&&!Object.keys(st.per||{}).length)st.per=s.per;
   for(const k of ['goal','font','rd','theme','speed','locMode','seenN'])if(s[k]!==undefined&&s[k]!==null)st[k]=s[k];
