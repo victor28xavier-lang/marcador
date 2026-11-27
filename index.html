@@ -353,7 +353,7 @@ body[data-tab=notif]{--acc:var(--coral)}
   <div class="card stat3"><div><b id="nb">0</b>livros</div><div><b id="nd">0</b>lidos</div><div><b id="nm">0</b>minutos lidos</div></div>
   <div class="chips" id="chips"><button data-f="all" class="on">Todos</button><button data-f="reading"><i style="background:var(--blue)"></i>Lendo</button><button data-f="done"><i style="background:var(--green)"></i>Lidos</button><button data-f="new"><i style="background:var(--amber)"></i>Não iniciados</button><button data-f="fav"><span class="hic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.5 1.2 4.4 2.5.9-1.3 2.3-2.5 4.4-2.5 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg></span>Favoritos</button></div>
   <div class="grid" id="lib"></div>
-  <p class="note">Livros físicos entram pelo + também: é só escolher "Livro físico" e registrar o progresso e os minutos à mão. Os arquivos EPUB ficam só neste aparelho e o app funciona sem internet. Os amigos do clube veem só o seu apelido, o título, o autor, a porcentagem lida e os seus minutos por dia e por período. O tempo conta enquanto o livro está aberto e você está mexendo nele; depois de 2 minutos parado, pausa sozinho.</p>
+  <p class="note">Livros físicos entram pelo + também: é só escolher "Livro físico" e registrar o progresso e os minutos à mão. Os arquivos EPUB ficam só neste aparelho e o app funciona sem internet. Os amigos do clube veem só o seu apelido, o título, o autor, a porcentagem lida e os seus minutos por dia e por período. O tempo conta enquanto o livro está aberto e você está mexendo nele; depois de 2 minutos parado, pausa sozinho. <span style="opacity:.6">· versão 33</span></p>
 </section>
 <section class="view" id="v-notif" hidden>
   <div class="ph"><h1><span class="lg" aria-hidden="true"><i></i><i></i><i></i></span>Avisos</h1></div>
@@ -805,7 +805,7 @@ function bookDialog(base,mode){
   $('#dtitle').textContent=mode==='add'?'Adicionar livro':'Editar livro';
   $('#dsub').textContent=mode==='add'?(base.title?'Já preenchi com o que veio no arquivo. Ajuste se quiser.':'Esse arquivo não trouxe o nome. Preencha abaixo.'):'Atualize onde você está, a nota, o status ou os dados do livro.';
   const ph=mode==='phys';$('#dcvb').hidden=!(ph||base.phys);$('#dcvb').textContent=base.cover?'Trocar foto da capa':'Escolher foto da capa (opcional)';
-  if(ph){$('#dtitle').textContent='Adicionar livro físico';$('#dsub').textContent='Digite o nome: eu busco a capa, o autor e as páginas.'}
+  if(ph){$('#dtitle').textContent='Adicionar livro físico';$('#dsub').textContent='Digite o nome (ou o ISBN do código de barras): eu busco a capa, o autor e as páginas.'}
   $('#dok').textContent=mode==='edit'?'Salvar':'Adicionar';
   const del=$('#ddel');del.hidden=mode==='add';del.removeAttribute('data-arm');del.textContent='Remover livro da estante';
   $('#dstw').hidden=mode==='add';dlgSt=mode==='add'?null:ph?'done':statusOf(base);markSt();
@@ -818,26 +818,36 @@ function bookDialog(base,mode){
   return new Promise(res=>{dlgDone=res});
 }
 /* busca de capa, autor e páginas (Google Livros e Open Library) */
-let srT=0,srN=0,srRes=[],srOn=false;
+let srT=0,srN=0,srRes=[],srOn=false,srNoKey=false,srGErr=false;
 const nrm=x=>String(x||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();
 async function searchBooks(q){
   const out=[],seen=new Set(),add=(r,o)=>{const k=nrm(r.t)+'|'+nrm(r.a);if(r.t&&!seen.has(k)){seen.add(k);r.o=o*100+out.length;out.push(r)}};
-  const G=(qq,o,extra='')=>fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(qq)+'&maxResults=15&printType=books'+extra).then(r=>r.json()).then(j=>(j.items||[]).forEach(it=>{const v=it.volumeInfo||{},im=v.imageLinks||{};let u=(im.thumbnail||im.smallThumbnail||'').replace(/^http:/,'https:').replace(/&edge=curl/,'');
+  const gk=(window.FIREBASE_CONFIG||{}).apiKey||'';
+  const gf=async u=>{if(gk&&!srNoKey){try{const r=await fetch(u+'&key='+encodeURIComponent(gk));const j=await r.json();if(r.ok&&!j.error)return j;srNoKey=true}catch(e){}}
+    const r=await fetch(u);const j=await r.json();if(!r.ok||j.error){srGErr=true;return {}}return j};
+  const G=(qq,o,extra='')=>gf('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(qq)+'&maxResults=15&printType=books'+extra).then(j=>(j.items||[]).forEach(it=>{const v=it.volumeInfo||{},im=v.imageLinks||{};let u=(im.thumbnail||im.smallThumbnail||'').replace(/^http:/,'https:').replace(/&edge=curl/,'');
     add({t:String(v.title||'')+(v.subtitle&&String(v.title||'').length<40?': '+v.subtitle:''),a:(v.authors||[]).join(', '),pg:+v.pageCount||0,u:okUrl(u)?u:''},o)})).catch(()=>{});
   const O=(qs,o)=>fetch('https://openlibrary.org/search.json?'+qs+'&limit=10&fields=title,author_name,cover_i,number_of_pages_median').then(r=>r.json()).then(j=>(j.docs||[]).forEach(d=>add({t:String(d.title||''),a:(d.author_name||[]).slice(0,2).join(', '),pg:+d.number_of_pages_median||0,u:d.cover_i?'https://covers.openlibrary.org/b/id/'+(+d.cover_i)+'-M.jpg':''},o))).catch(()=>{});
-  const ph=q.replace(/"/g,'');
-  await Promise.all([G('intitle:"'+ph+'"',0,'&langRestrict=pt'),G('intitle:"'+ph+'"',1),O('title='+encodeURIComponent(ph),2),G(ph,3),O('q='+encodeURIComponent(ph),4)]);
+  const ph=q.replace(/"/g,''),isbn=q.replace(/[^0-9Xx]/g,'');
+  if(/^(97[89])?\d{9}[\dXx]$/.test(isbn)&&isbn.length>=10&&q.replace(/[\d\sXx-]/g,'').length===0){
+    await Promise.all([fetch('https://brasilapi.com.br/api/isbn/v1/'+isbn).then(r=>r.ok?r.json():null).then(d=>{if(d&&d.title)add({t:String(d.title)+(d.subtitle?': '+d.subtitle:''),a:(d.authors||[]).join(', '),pg:+d.page_count||0,u:'https://books.google.com/books/content?vid=ISBN'+isbn+'&printsec=frontcover&img=1&zoom=1'},0)}).catch(()=>{}),
+      G('isbn:'+isbn,1),O('isbn='+isbn,2)]);
+    return out.slice(0,12);
+  }
+  const by=nrm($('#ba').value);
+  await Promise.all([G('intitle:"'+ph+'"',0,'&langRestrict=pt'),G('intitle:"'+ph+'"',1),O('title='+encodeURIComponent(ph),2),G(ph,3),O('q='+encodeURIComponent(ph),4),...(by?[G('intitle:"'+ph+'" inauthor:'+by,0),O('title='+encodeURIComponent(ph)+'&author='+encodeURIComponent(by),0)]:[])]);
   const nq=nrm(q),ws=nq.split(' ').filter(w=>w.length>1);
   const sc=r=>{const t=nrm(r.t),a=nrm(r.a);if(t===nq)return 5;if(t.startsWith(nq))return 4;if(t.includes(nq))return 3;if(ws.length&&ws.every(w=>t.includes(w)))return 2;if(ws.length&&ws.every(w=>t.includes(w)||a.includes(w)))return 1;return 0};
-  out.forEach(r=>r.s=sc(r));
+  out.forEach(r=>{r.s=sc(r);if(r.s>0&&by&&by.split(' ').some(w=>w.length>2&&nrm(r.a).includes(w)))r.s+=.5});
   const good=out.some(r=>r.s>0)?out.filter(r=>r.s>0):out;
   return good.sort((x,y)=>(y.s-x.s)||((!!y.u)-(!!x.u))||(x.o-y.o)).slice(0,12);
 }
 function runSearch(q){
   clearTimeout(srT);q=q.trim();if(!srOn||q.length<3){$('#bsr').hidden=true;return}
   srT=setTimeout(async()=>{const n=++srN;$('#bsr').hidden=false;$('#bsrl').textContent='Procurando…';$('#bsrw').innerHTML='';
-    const r=await searchBooks(q);if(n!==srN||!srOn)return;srRes=r;
-    if(!r.length){$('#bsrl').textContent='Não achei esse livro. Pode preencher à mão ou pôr uma foto.';return}
+    srGErr=false;const r=await searchBooks(q);if(n!==srN||!srOn)return;srRes=r;
+    const exact=r.some(x=>x.s>0);
+    if(!r.length||!exact&&!/^[\d\sXx-]+$/.test(q)){$('#bsrl').textContent=(srGErr?'A busca do Google não respondeu agora. ':'')+'Não achei esse título. Tente pôr o autor, ou digite o ISBN (o número do código de barras atrás do livro).';$('#bsrw').innerHTML='';return}
     $('#bsrl').textContent='Achei estes. Toque no seu para puxar capa, autor e páginas:';
     $('#bsrw').innerHTML=r.map((x,i)=>`<button type="button" data-sr="${i}">${coverHtml({title:x.t,author:x.a,cover:x.u,pct:0,st:'new'})}<b class="t">${esc(x.t)}</b><small>${esc(x.a)}</small></button>`).join('')},550);
 }
@@ -852,6 +862,7 @@ $('#bsrw').addEventListener('click',async e=>{const b=e.target.closest('[data-sr
   dcv();
 });
 $('#bt').addEventListener('input',e=>runSearch(e.target.value));
+$('#ba').addEventListener('input',()=>{if(srOn&&$('#bt').value.trim().length>=3)runSearch($('#bt').value)});
 $('#dcvb').onclick=()=>$('#dcvf').click();
 $('#dcvf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
   try{const url=URL.createObjectURL(f),im=new Image();im.src=url;await im.decode();
